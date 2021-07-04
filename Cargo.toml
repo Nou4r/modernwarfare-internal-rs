@@ -1,0 +1,15 @@
+[package]
+name = "modernwarfare-internal-rs"
+version = "0.1.0"
+edition = "2018"
+build = "build.rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[build-dependencies]
+cc = "1.0.68"
+cmake = "0.1.45"
+
+[dependencies]
+imgui = { path = "imgui-rs/imgui" }
