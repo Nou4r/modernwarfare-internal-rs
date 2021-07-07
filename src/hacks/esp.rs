@@ -1,14 +1,15 @@
 use std::cmp::Ordering;
 
 use imgui::ImColor32;
+use rand::{RngCore, SeedableRng};
 
 use crate::config::Config;
+use crate::fonts::Font;
 use crate::gamedata::Gamedata;
 use crate::math::Vector2;
-use crate::overlay::{Font, ImguiOverlay, TextOptions, TextStyle};
-use crate::sdk::{Player, units_to_m, Stance};
+use crate::overlay::{ImguiOverlay, TextOptions, TextStyle};
+use crate::sdk::{Player, Stance, units_to_m};
 use crate::util::hsv_to_rgb;
-use rand::{SeedableRng, RngCore};
 
 pub struct EspConfig {
     pub enabled: bool,

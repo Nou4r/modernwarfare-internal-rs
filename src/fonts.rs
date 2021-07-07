@@ -1,8 +1,9 @@
-use imgui::*;
-use crate::overlay::Font;
-use crate::util::Global;
 use std::collections::HashMap;
+
+use imgui::*;
 use imgui::internal::RawCast;
+
+use crate::util::Global;
 
 pub static FONTS: Global<HashMap<Font, FontId>> = Global::new();
 
@@ -10,10 +11,6 @@ pub unsafe fn init_fonts(ctx: &mut Context, font_scale: f32) {
     let mut fonts = HashMap::new();
 
     let mut atlas = ctx.fonts();
-    if let FontAtlasRefMut::Owned(ref atlas) = atlas {
-        log::info!("raw = {:p}", atlas.raw());
-    }
-    log::info!("rust size = {}", std::mem::size_of::<FontAtlas>());
 
     // First font is default
     fonts.insert(
@@ -59,4 +56,13 @@ pub unsafe fn init_fonts(ctx: &mut Context, font_scale: f32) {
     );
 
     FONTS.init(fonts);
+}
+
+#[derive(Debug, Clone, Hash, Eq, PartialEq)]
+pub enum Font {
+    Default,
+    Pixel,
+    Tahoma,
+    Verdana,
+    Undefined,
 }

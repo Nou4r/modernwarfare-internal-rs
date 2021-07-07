@@ -16,7 +16,7 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
-#include <Windows.h>
+#include <windows.h>
 #include <tchar.h>
 #include <dwmapi.h>
 
@@ -25,14 +25,13 @@
 
 // Using XInput for gamepad (will load DLL dynamically)
 #ifndef IMGUI_IMPL_WIN32_DISABLE_GAMEPAD
-#include <Xinput.h>
+#include <XInput.h>
 typedef DWORD (WINAPI *PFN_XInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
 typedef DWORD (WINAPI *PFN_XInputGetState)(DWORD, XINPUT_STATE*);
 #endif
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
-//  2021-03-23: Inputs: Clearing keyboard down array when losing focus (WM_KILLFOCUS).
 //  2021-02-18: Added ImGui_ImplWin32_EnableAlphaCompositing(). Non Visual Studio users will need to link with dwmapi.lib (MinGW/gcc: use -ldwmapi).
 //  2021-02-17: Fixed ImGui_ImplWin32_EnableDpiAwareness() attempting to get SetProcessDpiAwareness from shcore.dll on Windows 8 whereas it is only supported on Windows 8.1.
 //  2021-01-25: Inputs: Dynamically loading XInput DLL.
@@ -135,7 +134,7 @@ bool    ImGui_ImplWin32_Init(void* hwnd)
             break;
         }
 #endif // IMGUI_IMPL_WIN32_DISABLE_GAMEPAD
-
+    
     return true;
 }
 
@@ -149,7 +148,7 @@ void    ImGui_ImplWin32_Shutdown()
     g_XInputGetCapabilities = NULL;
     g_XInputGetState = NULL;
 #endif // IMGUI_IMPL_WIN32_DISABLE_GAMEPAD
-
+    
     g_hWnd = NULL;
     g_Time = 0;
     g_TicksPerSecond = 0;
@@ -194,7 +193,6 @@ static bool ImGui_ImplWin32_UpdateMouseCursor()
 static void ImGui_ImplWin32_UpdateMousePos()
 {
     ImGuiIO& io = ImGui::GetIO();
-    IM_ASSERT(g_hWnd != 0);
 
     // Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
     if (io.WantSetMousePos)
@@ -373,9 +371,6 @@ IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARA
     case WM_SYSKEYUP:
         if (wParam < 256)
             io.KeysDown[wParam] = 0;
-        return 0;
-    case WM_KILLFOCUS:
-        memset(io.KeysDown, 0, sizeof(io.KeysDown));
         return 0;
     case WM_CHAR:
         // You can also use ToAscii()+GetKeyboardState() to retrieve characters.

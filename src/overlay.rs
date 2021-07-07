@@ -1,6 +1,7 @@
 use imgui::*;
 use imgui::sys::ImColor;
 
+use crate::fonts;
 use crate::fonts::FONTS;
 use crate::util::read_memory;
 
@@ -55,10 +56,7 @@ impl ImguiOverlay<'_, '_> {
 
         let font = *FONTS.get().get(&options.font).unwrap();
 
-        // log::debug!("asd = {}", unsafe { read_memory::<u8>(font.unwrap() as *const _ as _) });
-
-        // let font_token = self.ui.push_font(font);
-        // font_token.pop();
+        let font_token = self.ui.push_font(font);
 
         let text = unsafe { ImStr::from_ptr_unchecked(ImString::new(text).as_ptr()) };
 
@@ -97,14 +95,14 @@ impl ImguiOverlay<'_, '_> {
 
         draw(options.color, (0.0, 0.0));
 
-        // font_token.pop();
+        font_token.pop();
     }
 }
 
 #[derive(Debug, Clone)]
 pub struct TextOptions {
     pub color: ImColor32,
-    pub font: Font,
+    pub font: fonts::Font,
     pub centered_horizontal: bool,
     pub centered_vertical: bool,
     pub style: TextStyle,
@@ -115,7 +113,7 @@ impl Default for TextOptions {
     fn default() -> Self {
         Self {
             color: ImColor32::WHITE,
-            font: Font::Verdana,
+            font: fonts::Font::Verdana,
             centered_horizontal: false,
             centered_vertical: false,
             style: TextStyle::Shadow,
@@ -139,7 +137,7 @@ impl TextOptions {
         self.shadow_color.a = self.color.a;
         self
     }
-    generate_setter!(font: Font);
+    generate_setter!(font: crate::fonts::Font);
     generate_setter!(centered_horizontal: bool);
     generate_setter!(centered_vertical: bool);
     generate_setter!(style: TextStyle);
@@ -151,13 +149,4 @@ pub enum TextStyle {
     None,
     Shadow,
     Outlined,
-}
-
-#[derive(Debug, Clone, Hash, Eq, PartialEq)]
-pub enum Font {
-    Default,
-    Pixel,
-    Tahoma,
-    Verdana,
-    Undefined,
 }

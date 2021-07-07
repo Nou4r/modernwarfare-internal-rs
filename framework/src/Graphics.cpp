@@ -84,7 +84,7 @@ static void initImguiTheme() noexcept
     colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
     colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
-    colors[ImGuiCol_WindowShadow] = ImColor(0, 0, 0);
+//    colors[ImGuiCol_WindowShadow] = ImColor(0, 0, 0);
 
     style->ChildRounding = 4.0f;
     style->FrameBorderSize = 1.0f;
@@ -117,7 +117,6 @@ void graphics::start(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pCommandQu
 
         initImguiTheme();
         on_imgui_init(ctx);
-        dbg::info("c++ size: {}", sizeof(ImFontAtlas));
 
         // Add font
 //    std::string fontPath = Process::getSystemWindowDirectory() + "Fonts\\msyh.ttc";

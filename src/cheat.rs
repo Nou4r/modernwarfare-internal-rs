@@ -1,16 +1,17 @@
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
+use imgui::ImColor32;
+use imgui::sys::ImColor;
 use log::*;
 
+use crate::config::CONFIG;
 use crate::decryption::DECRYPTION;
+use crate::fonts::Font;
 use crate::gamedata::GAMEDATA;
+use crate::hacks;
+use crate::overlay::{ImguiOverlay, TextOptions};
 use crate::sdk;
 use crate::util::Global;
-use crate::overlay::{ImguiOverlay, TextOptions, Font};
-use imgui::sys::ImColor;
-use imgui::ImColor32;
-use crate::hacks;
-use crate::config::CONFIG;
 
 #[derive(Default)]
 pub struct Cheat {

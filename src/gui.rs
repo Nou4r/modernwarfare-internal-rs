@@ -7,6 +7,7 @@ use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
 use crate::sdk;
 use crate::util::{Global, RenderState, try_read_memory};
+use crate::fonts::FONTS;
 
 pub static GUI: Global<Gui> = Global::new();
 
@@ -23,13 +24,14 @@ impl Default for Gui {
 
 impl Gui {
     pub unsafe fn render(&mut self, ui: &Ui) {
+        let _token = ui.push_font(*FONTS.get().get(&crate::fonts::Font::Verdana).unwrap());
+
         self.show_deubg_window(ui);
 
         if !self.open {
             return;
         }
 
-        ui.show_demo_window(&mut true);
         self.show_config_window(ui, CONFIG.get_mut());
     }
 
