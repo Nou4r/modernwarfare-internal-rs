@@ -62,23 +62,22 @@ impl Gui {
                                 .display_format(im_str!("%.0fm"))
                                 .build(ui, &mut cfg.esp.max_distance);
 
-                            let color_edit_flags = ColorEditFlags::NO_ALPHA | ColorEditFlags::NO_LABEL |
-                                ColorEditFlags::DISPLAY_HSV | ColorEditFlags::ALPHA_BAR;
+                            let color_edit_flags = ColorEditFlags::NO_INPUTS | ColorEditFlags::NO_LABEL | ColorEditFlags::ALPHA_BAR;
 
                             ui.checkbox(im_str!("Show Teammates"), &mut cfg.esp.show_teammates);
                             ui.checkbox(im_str!("Align"), &mut cfg.esp.align);
 
                             ui.checkbox(im_str!("Box"), &mut cfg.esp.box_enabled);
                             ui.same_line();
-                            ColorEdit::new(im_str!("Box Color"), &mut cfg.esp.box_color).label(false).flags(color_edit_flags).build(ui);
+                            ColorEdit::new(im_str!("Box Color"), &mut cfg.esp.box_color).flags(color_edit_flags).build(ui);
 
                             ui.checkbox(im_str!("Box Border"), &mut cfg.esp.border_enabled);
                             ui.same_line();
-                            ColorEdit::new(im_str!("Box Border Color"), &mut cfg.esp.border_color).label(false).build(ui);
+                            ColorEdit::new(im_str!("Box Border Color"), &mut cfg.esp.border_color).flags(color_edit_flags).build(ui);
 
                             ui.checkbox(im_str!("Name"), &mut cfg.esp.name_enabled);
                             ui.same_line();
-                            ColorEdit::new(im_str!("Name Color"), &mut cfg.esp.name_color).label(false).build(ui);
+                            ColorEdit::new(im_str!("Name Color"), &mut cfg.esp.name_color).flags(color_edit_flags).build(ui);
 
                             ui.checkbox(im_str!("Health"), &mut cfg.esp.health_bar_enabled);
                             ui.checkbox(im_str!("Distance"), &mut cfg.esp.distance_enabled);
