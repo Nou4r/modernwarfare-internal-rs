@@ -26,7 +26,7 @@ impl Cheat {
         GAMEDATA.get_mut().update();
 
         if GAMEDATA.valid {
-            // hacks::no_recoil::tick(&CONFIG);
+            hacks::no_recoil::tick(&CONFIG);
         }
     }
 

@@ -14,13 +14,13 @@ pub unsafe fn tick(config: &Config) {
         return;
     }
 
-    if let Some(client_base) = DECRYPTION.client_base {
-        no_recoil_tick(client_base);
+    if let Some(client_info) = DECRYPTION.client_info {
+        no_recoil_tick(client_info);
     }
 }
 
-unsafe fn no_recoil_tick(client_info_base: u64) {
-    let r12 = Wrapping(client_info_base + offsets::RECOIL);
+unsafe fn no_recoil_tick(client_info: u64) {
+    let r12 = Wrapping(client_info + offsets::RECOIL);
     let rsi = r12 + Wrapping(0x4);
     let edx: Wrapping<u32> = Wrapping(read_memory((r12 + Wrapping(0xC)).0));
     let mut ecx = edx;
@@ -43,6 +43,5 @@ unsafe fn no_recoil_tick(client_info_base: u64) {
         log::error!("no_recoil tried to write an invalid address: {:#X}", address);
         return;
     }
-    // std::ptr::write(address as _, bytes);
-    log::trace!("{:#X}, {:?}", address, bytes);
+    std::ptr::write(address as _, bytes);
 }
