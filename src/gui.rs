@@ -5,8 +5,8 @@ use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
-use crate::sdk;
-use crate::util::{Global, RenderState, try_read_memory, keybind_select};
+use crate::{sdk, offsets};
+use crate::util::{Global, RenderState, try_read_memory, keybind_select, read_memory};
 use crate::fonts::FONTS;
 
 pub static GUI: Global<Gui> = Global::new();
@@ -168,6 +168,7 @@ impl Gui {
                 debug!(CHEAT.gamedata_history.len());
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
+                    debug!(GAMEDATA.local_player().weapon.velocity);
                 }
             });
     }

@@ -120,9 +120,9 @@ fn get_aim_position(player: &Player, gamedata: &Gamedata, ctx: &AimbotContext) -
         .collect::<VecDeque<_>>();
     let target = Target::from_location_history(&player.origin, &player_history);
 
-    // let weapon = &gamedata.local_player().weapon;
-    // let projectile = Projectile{velocity: m_to_units(weapon.velocity), gravity: m_to_units(9.8), source_pos: gamedata.camera_pos};
-    let projectile = Projectile { velocity: 4000.0, gravity: m_to_units(9.8), source_pos: gamedata.camera_pos };
+    let weapon = &gamedata.local_player().weapon;
+    let projectile = Projectile{velocity: m_to_units(weapon.velocity), gravity: m_to_units(9.8), source_pos: gamedata.camera_pos};
+    // let projectile = Projectile { velocity: 4000.0, gravity: m_to_units(9.8), source_pos: gamedata.camera_pos };
 
     let pred_pos = run_prediction(&target, &projectile);
     let pred_pos = run_bullet_drop(&pred_pos, &projectile);
