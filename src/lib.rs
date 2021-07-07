@@ -3,8 +3,10 @@
 #![feature(maybe_uninit_ref)]
 #![allow(clippy::missing_safety_doc)]
 
+use std::ptr::null_mut;
 use std::time::Instant;
 
+use log::*;
 use log::LevelFilter;
 
 use crate::cheat::CHEAT;
@@ -14,8 +16,6 @@ use crate::gamedata::GAMEDATA;
 use crate::gui::GUI;
 use crate::memory::MEMORY;
 use crate::overlay::ImguiOverlay;
-use log::*;
-use std::ptr::null_mut;
 
 pub mod cheat;
 pub mod gui;
@@ -33,7 +33,7 @@ pub mod config;
 pub mod fonts;
 pub mod prediction;
 
-pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"));
+pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
 pub static DEBUG: bool = true;
 
@@ -82,7 +82,7 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
 #[derive(Copy, Clone, PartialEq)]
 pub enum InputType {
     KeyDown = 0,
-    KeyUp = 1
+    KeyUp = 1,
 }
 
 #[no_mangle]
