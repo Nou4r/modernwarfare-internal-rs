@@ -27,23 +27,18 @@ static HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterv
         dbg::error(_("Error in hooked present: commandQueue was null"));
     }
 
-    const auto start = std::chrono::high_resolution_clock::now();
-
     graphics::start(pSwapChain, commandQueue);
     graphics::newFrame();
 
     on_frame(ImGui::GetCurrentContext());
-//    ImGui::ShowDemoWindow();
 
     const auto result = graphics::render(pSwapChain, syncInterval, flags);
-
-    const auto end = std::chrono::high_resolution_clock::now();
-    cheat->tickTime = end - start;
     return result;
 }
 
 static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    ImGuiIO& io = ImGui::GetIO();
     switch (uMsg) {
         case 0x403:
         case WM_SIZE: {
@@ -58,7 +53,7 @@ static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
         }
         case WM_SETCURSOR: {
-            if (hooks->captureMouse) {
+            if (io.WantCaptureMouse) {
                 return ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
             } else {
                 return CallWindowProc(hooks->originalWndProc, hWnd, uMsg, wParam, lParam);
@@ -66,18 +61,17 @@ static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
             // TODO: Add mouse events
         case WM_KEYDOWN: {
-            cheat->handleInputEvent(InputEventType::KeyDown, wParam);
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), wParam);
             break;
         }
         case WM_KEYUP: {
-            cheat->handleInputEvent(InputEventType::KeyUp, wParam);
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), wParam);
             break;
         }
     };
 
-    ImGuiIO& io = ImGui::GetIO();
     ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
-    if (hooks->captureMouse &&
+    if (io.WantCaptureMouse &&
         (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP ||
          uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE ||
          uMsg == WM_MOUSEHOVER || uMsg == WM_KEYDOWN || uMsg == WM_KEYUP)) {

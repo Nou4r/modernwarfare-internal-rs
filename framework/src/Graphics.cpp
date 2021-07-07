@@ -10,6 +10,7 @@
 #include "Memory.h"
 #include "Hooks.h"
 #include "Debug.h"
+#include "interop.h"
 
 bool graphics::started = false;
 bool graphics::needsRestart = false;
@@ -30,6 +31,73 @@ UINT graphics::g_frameIndex = 0;
 UINT64 graphics::g_fenceLastSignalValue = 0;
 ID3D12GraphicsCommandList* graphics::g_pCommandList = nullptr;
 
+static void initImguiTheme() noexcept
+{
+    ImGuiStyle* style = &ImGui::GetStyle();
+    ImVec4* colors = style->Colors;
+
+    colors[ImGuiCol_Text] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
+    colors[ImGuiCol_TextDisabled] = ImVec4(0.500f, 0.500f, 0.500f, 1.000f);
+    colors[ImGuiCol_WindowBg] = ImVec4(0.180f, 0.180f, 0.180f, 1.000f);
+    colors[ImGuiCol_ChildBg] = ImVec4(0.280f, 0.280f, 0.280f, 0.000f);
+    colors[ImGuiCol_PopupBg] = ImVec4(0.313f, 0.313f, 0.313f, 1.000f);
+    colors[ImGuiCol_Border] = ImVec4(0.266f, 0.266f, 0.266f, 1.000f);
+    colors[ImGuiCol_BorderShadow] = ImVec4(0.000f, 0.000f, 0.000f, 0.000f);
+    colors[ImGuiCol_FrameBg] = ImVec4(0.160f, 0.160f, 0.160f, 1.000f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.200f, 0.200f, 0.200f, 1.000f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.280f, 0.280f, 0.280f, 1.000f);
+    colors[ImGuiCol_TitleBg] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
+    colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
+    colors[ImGuiCol_MenuBarBg] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
+    colors[ImGuiCol_ScrollbarBg] = ImVec4(0.160f, 0.160f, 0.160f, 1.000f);
+    colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.277f, 0.277f, 0.277f, 1.000f);
+    colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.300f, 0.300f, 0.300f, 1.000f);
+    colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_CheckMark] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
+    colors[ImGuiCol_SliderGrab] = ImVec4(0.391f, 0.391f, 0.391f, 1.000f);
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_Button] = ImVec4(1.000f, 1.000f, 1.000f, 0.000f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(1.000f, 1.000f, 1.000f, 0.391f);
+    colors[ImGuiCol_Header] = ImVec4(0.313f, 0.313f, 0.313f, 1.000f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
+    colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
+    colors[ImGuiCol_SeparatorHovered] = ImVec4(0.391f, 0.391f, 0.391f, 1.000f);
+    colors[ImGuiCol_SeparatorActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_ResizeGrip] = ImVec4(1.000f, 1.000f, 1.000f, 0.250f);
+    colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.670f);
+    colors[ImGuiCol_ResizeGripActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_Tab] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
+    colors[ImGuiCol_TabHovered] = ImVec4(0.352f, 0.352f, 0.352f, 1.000f);
+    colors[ImGuiCol_TabActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
+    colors[ImGuiCol_TabUnfocused] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
+    colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
+    colors[ImGuiCol_PlotLines] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
+    colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_PlotHistogram] = ImVec4(0.586f, 0.586f, 0.586f, 1.000f);
+    colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_TextSelectedBg] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
+    colors[ImGuiCol_DragDropTarget] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_NavHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
+    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
+    colors[ImGuiCol_WindowShadow] = ImColor(0, 0, 0);
+
+    style->ChildRounding = 4.0f;
+    style->FrameBorderSize = 1.0f;
+    style->FrameRounding = 2.0f;
+    style->GrabMinSize = 7.0f;
+    style->PopupRounding = 2.0f;
+    style->ScrollbarRounding = 12.0f;
+    style->ScrollbarSize = 13.0f;
+    style->TabBorderSize = 1.0f;
+    style->TabRounding = 0.0f;
+    style->WindowRounding = 4.0f;
+}
+
 void graphics::start(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pCommandQueue)
 {
     if (!graphics::started) {
@@ -38,7 +106,7 @@ void graphics::start(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pCommandQu
 
         // Setup imgui context
         IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
+        const auto ctx = ImGui::CreateContext();
 
         // Setup Platform/Renderer bindings
         ImGui_ImplWin32_Init(get_process_window());
@@ -46,6 +114,10 @@ void graphics::start(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pCommandQu
                             DXGI_FORMAT_R8G8B8A8_UNORM, graphics::g_pSrvDescHeap,
                             graphics::g_pSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
                             graphics::g_pSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
+
+        initImguiTheme();
+        on_imgui_init(ctx);
+        dbg::info("c++ size: {}", sizeof(ImFontAtlas));
 
         // Add font
 //    std::string fontPath = Process::getSystemWindowDirectory() + "Fonts\\msyh.ttc";
@@ -73,7 +145,7 @@ void graphics::startD3D12(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pComm
     graphics::g_pCommandQueue = pCommandQueue;
 
     // Get the device
-    if (FAILED(graphics::g_pSwapChain->GetDevice(__uuidof(ID3D12Device), (void**)&graphics::g_pDevice)))
+    if (FAILED(graphics::g_pSwapChain->GetDevice(__uuidof(ID3D12Device), (void**) &graphics::g_pDevice)))
         DEBUG_ERROR("1");
 
     // Get the swap chain description
@@ -92,7 +164,7 @@ void graphics::startD3D12(IDXGISwapChain3* pSwapChain, ID3D12CommandQueue* pComm
 
     // ALlocate frame context
     graphics::g_frameContext = new FrameContext[graphics::g_frameCount];
-    graphics::g_resources = new ID3D12Resource*[graphics::g_frameCount];
+    graphics::g_resources = new ID3D12Resource* [graphics::g_frameCount];
     graphics::g_descriptors = new D3D12_CPU_DESCRIPTOR_HANDLE[graphics::g_frameCount];
 
     // Create the command allocator
@@ -172,7 +244,7 @@ HRESULT graphics::render(IDXGISwapChain3* pSwapChain, UINT SyncInterval, UINT Fl
     graphics::g_pCommandList->ResourceBarrier(1, &barrier);
     graphics::g_pCommandList->Close();
 
-    graphics::g_pCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)&graphics::g_pCommandList);
+    graphics::g_pCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*) &graphics::g_pCommandList);
 
     HRESULT result = hooks->originalPresent(pSwapChain, SyncInterval, Flags);
 
@@ -199,8 +271,7 @@ void graphics::clear()
 
     frameCtxt->FenceValue = 0;
 
-    if (graphics::g_pFence->GetCompletedValue() < fenceValue)
-    {
+    if (graphics::g_pFence->GetCompletedValue() < fenceValue) {
         graphics::g_pFence->SetEventOnCompletion(fenceValue, graphics::g_FenceEvent);
         WaitForSingleObject(graphics::g_FenceEvent, INFINITE);
     }
@@ -214,36 +285,29 @@ void graphics::clearVariables()
     graphics::g_pDevice = nullptr;
     graphics::g_pCommandQueue = nullptr;
 
-    if (graphics::g_pFence != nullptr)
-    {
+    if (graphics::g_pFence != nullptr) {
         graphics::g_pFence->Release();
         graphics::g_pFence = nullptr;
     }
 
-    if (graphics::g_pSrvDescHeap != nullptr)
-    {
+    if (graphics::g_pSrvDescHeap != nullptr) {
         graphics::g_pSrvDescHeap->Release();
         graphics::g_pSrvDescHeap = nullptr;
     }
 
-    if (graphics::g_pRtvDescHeap != nullptr)
-    {
+    if (graphics::g_pRtvDescHeap != nullptr) {
         graphics::g_pRtvDescHeap->Release();
         graphics::g_pRtvDescHeap = nullptr;
     }
 
-    if (graphics::g_pCommandList != nullptr)
-    {
+    if (graphics::g_pCommandList != nullptr) {
         graphics::g_pCommandList->Release();
         graphics::g_pCommandList = nullptr;
     }
 
-    if (graphics::g_frameContext != nullptr)
-    {
-        for (UINT i = 0; i < graphics::g_frameCount; ++i)
-        {
-            if (graphics::g_frameContext[i].CommandAllocator != nullptr)
-            {
+    if (graphics::g_frameContext != nullptr) {
+        for (UINT i = 0; i < graphics::g_frameCount; ++i) {
+            if (graphics::g_frameContext[i].CommandAllocator != nullptr) {
                 graphics::g_frameContext[i].CommandAllocator->Release();
                 graphics::g_frameContext[i].CommandAllocator = nullptr;
             }
@@ -253,12 +317,9 @@ void graphics::clearVariables()
         graphics::g_frameContext = nullptr;
     }
 
-    if (graphics::g_resources != nullptr)
-    {
-        for (UINT i = 0; i < graphics::g_frameCount; ++i)
-        {
-            if (graphics::g_resources[i] != nullptr)
-            {
+    if (graphics::g_resources != nullptr) {
+        for (UINT i = 0; i < graphics::g_frameCount; ++i) {
+            if (graphics::g_resources[i] != nullptr) {
                 graphics::g_resources[i]->Release();
                 graphics::g_resources[i] = nullptr;
             }
@@ -268,16 +329,14 @@ void graphics::clearVariables()
         graphics::g_resources = nullptr;
     }
 
-    if (graphics::g_descriptors != nullptr)
-    {
+    if (graphics::g_descriptors != nullptr) {
         delete[] graphics::g_descriptors;
         graphics::g_descriptors = nullptr;
     }
 
     graphics::g_waitableObject = nullptr;
 
-    if (graphics::g_FenceEvent)
-    {
+    if (graphics::g_FenceEvent) {
         CloseHandle(graphics::g_FenceEvent);
         graphics::g_FenceEvent = nullptr;
     }
@@ -290,7 +349,7 @@ FrameContext* graphics::waitForNextFrameResources()
 {
     graphics::g_frameIndex++;
 
-    HANDLE waitableObjects[] = {graphics::g_waitableObject, NULL };
+    HANDLE waitableObjects[] = {graphics::g_waitableObject, NULL};
     constexpr DWORD numWaitableObjects = 1;
 
     FrameContext* frameCtxt = &graphics::g_frameContext[graphics::g_frameIndex % graphics::g_frameCount];
@@ -337,9 +396,9 @@ void graphics::createFence()
 
 void graphics::createCommandAllocator()
 {
-    for (size_t i = 0; i < graphics::g_frameCount; i++)
-    {
-        if (FAILED(graphics::g_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&graphics::g_frameContext[i].CommandAllocator))))
+    for (size_t i = 0; i < graphics::g_frameCount; i++) {
+        if (FAILED(graphics::g_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(
+                &graphics::g_frameContext[i].CommandAllocator))))
             DEBUG_ERROR("5");
     }
 }
@@ -349,8 +408,7 @@ void graphics::getDescriptors()
     SIZE_T rtvDescriptorSize = graphics::g_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = g_pRtvDescHeap->GetCPUDescriptorHandleForHeapStart();
 
-    for (UINT i = 0; i < graphics::g_frameCount; i++)
-    {
+    for (UINT i = 0; i < graphics::g_frameCount; i++) {
         graphics::g_descriptors[i] = rtvHandle;
         rtvHandle.ptr += rtvDescriptorSize;
     }
@@ -358,7 +416,9 @@ void graphics::getDescriptors()
 
 void graphics::createCommandList()
 {
-    if (FAILED(graphics::g_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, graphics::g_frameContext[0].CommandAllocator, NULL, IID_PPV_ARGS(&g_pCommandList)))
+    if (FAILED(graphics::g_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                                      graphics::g_frameContext[0].CommandAllocator, NULL,
+                                                      IID_PPV_ARGS(&g_pCommandList)))
         || FAILED(g_pCommandList->Close()))
         DEBUG_ERROR("6");
 }
@@ -366,8 +426,7 @@ void graphics::createCommandList()
 void graphics::createRenderTarget()
 {
     ID3D12Resource* pBackBuffer = nullptr;
-    for (UINT i = 0; i < graphics::g_frameCount; i++)
-    {
+    for (UINT i = 0; i < graphics::g_frameCount; i++) {
         if (FAILED(graphics::g_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer))))
             DEBUG_ERROR("8");
         graphics::g_pDevice->CreateRenderTargetView(pBackBuffer, NULL, graphics::g_descriptors[i]);

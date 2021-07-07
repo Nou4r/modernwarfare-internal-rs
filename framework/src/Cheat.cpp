@@ -19,29 +19,6 @@ Cheat::Cheat(HMODULE moduleHandle) noexcept
     on_load();
 }
 
-// Runs every frame
-void Cheat::tick() noexcept
-{
-}
-
-// key for example could be VK_LBUTTON
-void Cheat::handleInputEvent(InputEventType type, std::uint32_t key) noexcept
-{
-    on_input_event(static_cast<int32_t>(type), key);
-    if (type == InputEventType::KeyDown) {
-        switch (key) {
-            case VK_INSERT: {
-//                gui->handleToggle();
-                break;
-            }
-            case VK_END: {
-                unload();
-                break;
-            }
-        }
-    }
-}
-
 void Cheat::unload() noexcept
 {
     hooks->uninstall();

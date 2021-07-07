@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "imgui",
+    "imgui-sys",
+    "imgui-gfx-renderer",
+    "imgui-glium-renderer",
+    "imgui-winit-support",
+    "imgui-examples",
+    "imgui-gfx-examples",
+    "xtask",
+]

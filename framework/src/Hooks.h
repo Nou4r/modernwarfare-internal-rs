@@ -16,7 +16,6 @@ public:
     void hookWndProc() noexcept;
     void uninstall() const noexcept;
 
-    bool captureMouse = true;
     WNDPROC originalWndProc{};
     std::add_pointer_t<PresentFunction> originalPresent;
 private:

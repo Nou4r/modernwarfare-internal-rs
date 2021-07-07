@@ -14,26 +14,7 @@ namespace utils
 {
     uint8_t *find_pattern(const char *, const char *module_name = "ModernWarfare.exe");
 
-#ifdef DEBUG_READ
-    bool is_bad_ptr(auto p) {
-        static_assert(sizeof(decltype(p)) == 8);
-        MEMORY_BASIC_INFORMATION mbi = {0};
-        if (::VirtualQuery(reinterpret_cast<LPCVOID>(p), &mbi, sizeof(mbi)))
-        {
-            DWORD mask = (PAGE_READONLY|PAGE_READWRITE|PAGE_WRITECOPY|PAGE_EXECUTE_READ|PAGE_EXECUTE_READWRITE|PAGE_EXECUTE_WRITECOPY);
-            bool b = !(mbi.Protect & mask);
-            // check the page is not a guard page
-            if (mbi.Protect & (PAGE_GUARD|PAGE_NOACCESS)) b = true;
-
-            return b;
-        }
-        return true;
-    }
-#else
-    bool is_bad_ptr(auto p) {
-        return !((uintptr_t)(p) <= 0x7FFFFFFEFFFF && (uintptr_t)(p) >= 0x1000);
-    }
-#endif
+    extern "C" bool is_bad_ptr(std::uintptr_t p);
 
     int random_int(int, int);
 
