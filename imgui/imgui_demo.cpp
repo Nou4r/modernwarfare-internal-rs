@@ -1,4 +1,4 @@
-// dear imgui, v1.84 WIP
+// dear imgui, v1.82
 // (demo code)
 
 // Help:
@@ -6,9 +6,9 @@
 // - Newcomers, read 'Programmer guide' in imgui.cpp for notes on how to setup Dear ImGui in your codebase.
 // - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All applications in examples/ are doing that.
 // Read imgui.cpp for more details, documentation and comments.
-// Get the latest version at https://github.com/ocornut/imgui
+// Get latest version at https://github.com/ocornut/imgui
 
-// Message to the person tempted to delete this file when integrating Dear ImGui into their codebase:
+// Message to the person tempted to delete this file when integrating Dear ImGui into their code base:
 // Do NOT remove this file from your project! Think again! It is the most useful reference code that you and other
 // coders will want to refer to and call. Have the ImGui::ShowDemoWindow() function wired in an always-available
 // debug menu of your game/app! Removing this file from your project is hindering access to documentation for everyone
@@ -16,19 +16,19 @@
 // Everything in this file will be stripped out by the linker if you don't call ImGui::ShowDemoWindow().
 // If you want to link core Dear ImGui in your shipped builds but want a thorough guarantee that the demo will not be
 // linked, you can setup your imconfig.h with #define IMGUI_DISABLE_DEMO_WINDOWS and those functions will be empty.
-// In another situation, whenever you have Dear ImGui available you probably want this to be available for reference.
+// In other situation, whenever you have Dear ImGui available you probably want this to be available for reference.
 // Thank you,
 // -Your beloved friend, imgui_demo.cpp (which you won't delete)
 
 // Message to beginner C/C++ programmers about the meaning of the 'static' keyword:
-// In this demo code, we frequently use 'static' variables inside functions. A static variable persists across calls,
+// In this demo code, we frequently we use 'static' variables inside functions. A static variable persist across calls,
 // so it is essentially like a global variable but declared inside the scope of the function. We do this as a way to
 // gather code and data in the same place, to make the demo source code faster to read, faster to write, and smaller
 // in size. It also happens to be a convenient way of storing simple UI related information as long as your function
 // doesn't need to be reentrant or used in multiple threads. This might be a pattern you will want to use in your code,
 // but most of the real data you would be editing is likely going to be stored outside your functions.
 
-// The Demo code in this file is designed to be easy to copy-and-paste into your application!
+// The Demo code in this file is designed to be easy to copy-and-paste in into your application!
 // Because of this:
 // - We never omit the ImGui:: prefix when calling functions, even though most code here is in the same namespace.
 // - We try to declare static variables in the local scope, as close as possible to the code using them.
@@ -92,8 +92,7 @@ Index of this file:
 
 // Visual Studio warnings
 #ifdef _MSC_VER
-#pragma warning (disable: 4996)     // 'This function or variable may be unsafe': strcpy, strdup, sprintf, vsnprintf, sscanf, fopen
-#pragma warning (disable: 26451)    // [Static Analyzer] Arithmetic overflow : Using operator 'xxx' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator 'xxx' to avoid overflow(io.2).
+#pragma warning (disable: 4996) // 'This function or variable may be unsafe': strcpy, strdup, sprintf, vsnprintf, sscanf, fopen
 #endif
 
 // Clang/GCC warnings with -Weverything
@@ -464,7 +463,6 @@ void ImGui::ShowDemoWindow(bool* p_open)
             ImGui::CheckboxFlags("io.BackendFlags: HasMouseCursors",      &backend_flags, ImGuiBackendFlags_HasMouseCursors);
             ImGui::CheckboxFlags("io.BackendFlags: HasSetMousePos",       &backend_flags, ImGuiBackendFlags_HasSetMousePos);
             ImGui::CheckboxFlags("io.BackendFlags: RendererHasVtxOffset", &backend_flags, ImGuiBackendFlags_RendererHasVtxOffset);
-            ImGui::CheckboxFlags("io.BackendFlags: RendererHasTexReload", &backend_flags, ImGuiBackendFlags_RendererHasTexReload);
             ImGui::TreePop();
             ImGui::Separator();
         }
@@ -1555,7 +1553,7 @@ static void ShowDemoWindowWidgets()
     // Plot/Graph widgets are not very good.
     // Consider writing your own, or using a third-party one, see:
     // - ImPlot https://github.com/epezent/implot
-    // - others https://github.com/ocornut/imgui/wiki/Useful-Extensions
+    // - others https://github.com/ocornut/imgui/wiki/Useful-Widgets
     if (ImGui::TreeNode("Plots Widgets"))
     {
         static bool animate = true;
@@ -1604,7 +1602,7 @@ static void ShowDemoWindowWidgets()
         };
         static int func_type = 0, display_count = 70;
         ImGui::Separator();
-        ImGui::SetNextItemWidth(ImGui::GetFontSize() * 8);
+        ImGui::SetNextItemWidth(100);
         ImGui::Combo("func", &func_type, "Sin\0Saw\0");
         ImGui::SameLine();
         ImGui::SliderInt("Sample count", &display_count, 1, 400);
@@ -2394,7 +2392,7 @@ static void ShowDemoWindowLayout()
         //   the POV of the parent window). See 'Demo->Querying Status (Active/Focused/Hovered etc.)' for details.
         {
             static int offset_x = 0;
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * 8);
+            ImGui::SetNextItemWidth(100);
             ImGui::DragInt("Offset X", &offset_x, 1.0f, -1000, 1000);
 
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (float)offset_x);
@@ -2416,14 +2414,14 @@ static void ShowDemoWindowLayout()
 
     if (ImGui::TreeNode("Widgets Width"))
     {
-        static float f = 0.0f;
-        static bool show_indented_items = true;
-        ImGui::Checkbox("Show indented items", &show_indented_items);
-
         // Use SetNextItemWidth() to set the width of a single upcoming item.
         // Use PushItemWidth()/PopItemWidth() to set the width of a group of items.
         // In real code use you'll probably want to choose width values that are proportional to your font size
         // e.g. Using '20.0f * GetFontSize()' as width instead of '200.0f', etc.
+
+        static float f = 0.0f;
+        static bool show_indented_items = true;
+        ImGui::Checkbox("Show indented items", &show_indented_items);
 
         ImGui::Text("SetNextItemWidth/PushItemWidth(100)");
         ImGui::SameLine(); HelpMarker("Fixed width.");
@@ -2840,8 +2838,6 @@ static void ShowDemoWindowLayout()
             {
                 for (int item = 0; item < 100; item++)
                 {
-                    if (item > 0)
-                        ImGui::SameLine();
                     if (enable_track && item == track_item)
                     {
                         ImGui::TextColored(ImVec4(1, 1, 0, 1), "Item %d", item);
@@ -2851,6 +2847,7 @@ static void ShowDemoWindowLayout()
                     {
                         ImGui::Text("Item %d", item);
                     }
+                    ImGui::SameLine();
                 }
             }
             float scroll_x = ImGui::GetScrollX();
@@ -3194,84 +3191,46 @@ static void ShowDemoWindowPopups()
 
     if (ImGui::TreeNode("Context menus"))
     {
-        HelpMarker("\"Context\" functions are simple helpers to associate a Popup to a given Item or Window identifier.");
-
         // BeginPopupContextItem() is a helper to provide common/simple popup behavior of essentially doing:
-        //     if (id == 0)
-        //         id = GetItemID(); // Use last item id
-        //     if (IsItemHovered() && IsMouseReleased(ImGuiMouseButton_Right))
-        //         OpenPopup(id);
-        //     return BeginPopup(id);
-        // For advanced advanced uses you may want to replicate and customize this code.
-        // See more details in BeginPopupContextItem().
-
-        // Example 1
-        // When used after an item that has an ID (e.g. Button), we can skip providing an ID to BeginPopupContextItem(),
-        // and BeginPopupContextItem() will use the last item ID as the popup ID.
+        //    if (IsItemHovered() && IsMouseReleased(ImGuiMouseButton_Right))
+        //       OpenPopup(id);
+        //    return BeginPopup(id);
+        // For more advanced uses you may want to replicate and customize this code.
+        // See details in BeginPopupContextItem().
+        static float value = 0.5f;
+        ImGui::Text("Value = %.3f (<-- right-click here)", value);
+        if (ImGui::BeginPopupContextItem("item context menu"))
         {
-            const char* names[5] = { "Label1", "Label2", "Label3", "Label4", "Label5" };
-            for (int n = 0; n < 5; n++)
-            {
-                ImGui::Selectable(names[n]);
-                if (ImGui::BeginPopupContextItem()) // <-- use last item id as popup id
-                {
-                    ImGui::Text("This a popup for \"%s\"!", names[n]);
-                    if (ImGui::Button("Close"))
-                        ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                }
-                if (ImGui::IsItemHovered())
-                    ImGui::SetTooltip("Right-click to open popup");
-            }
+            if (ImGui::Selectable("Set to zero")) value = 0.0f;
+            if (ImGui::Selectable("Set to PI")) value = 3.1415f;
+            ImGui::SetNextItemWidth(-FLT_MIN);
+            ImGui::DragFloat("##Value", &value, 0.1f, 0.0f, 0.0f);
+            ImGui::EndPopup();
         }
 
-        // Example 2
-        // Popup on a Text() element which doesn't have an identifier: we need to provide an identifier to BeginPopupContextItem().
-        // Using an explicit identifier is also convenient if you want to activate the popups from different locations.
+        // We can also use OpenPopupOnItemClick() which is the same as BeginPopupContextItem() but without the
+        // Begin() call. So here we will make it that clicking on the text field with the right mouse button (1)
+        // will toggle the visibility of the popup above.
+        ImGui::Text("(You can also right-click me to open the same popup as above.)");
+        ImGui::OpenPopupOnItemClick("item context menu", 1);
+
+        // When used after an item that has an ID (e.g.Button), we can skip providing an ID to BeginPopupContextItem().
+        // BeginPopupContextItem() will use the last item ID as the popup ID.
+        // In addition here, we want to include your editable label inside the button label.
+        // We use the ### operator to override the ID (read FAQ about ID for details)
+        static char name[32] = "Label1";
+        char buf[64];
+        sprintf(buf, "Button: %s###Button", name); // ### operator override ID ignoring the preceding label
+        ImGui::Button(buf);
+        if (ImGui::BeginPopupContextItem())
         {
-            HelpMarker("Text() elements don't have stable identifiers so we need to provide one.");
-            static float value = 0.5f;
-            ImGui::Text("Value = %.3f <-- (1) right-click this value", value);
-            if (ImGui::BeginPopupContextItem("my popup"))
-            {
-                if (ImGui::Selectable("Set to zero")) value = 0.0f;
-                if (ImGui::Selectable("Set to PI")) value = 3.1415f;
-                ImGui::SetNextItemWidth(-FLT_MIN);
-                ImGui::DragFloat("##Value", &value, 0.1f, 0.0f, 0.0f);
-                ImGui::EndPopup();
-            }
-
-            // We can also use OpenPopupOnItemClick() to toggle the visibility of a given popup.
-            // Here we make it that right-clicking this other text element opens the same popup as above.
-            // The popup itself will be submitted by the code above.
-            ImGui::Text("(2) Or right-click this text");
-            ImGui::OpenPopupOnItemClick("my popup", ImGuiPopupFlags_MouseButtonRight);
-
-            // Back to square one: manually open the same popup.
-            if (ImGui::Button("(3) Or click this button"))
-                ImGui::OpenPopup("my popup");
+            ImGui::Text("Edit name:");
+            ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
+            if (ImGui::Button("Close"))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
         }
-
-        // Example 3
-        // When using BeginPopupContextItem() with an implicit identifier (NULL == use last item ID),
-        // we need to make sure your item identifier is stable.
-        // In this example we showcase altering the item label while preserving its identifier, using the ### operator (see FAQ).
-        {
-            HelpMarker("Showcase using a popup ID linked to item ID, with the item having a changing label + stable ID using the ### operator.");
-            static char name[32] = "Label1";
-            char buf[64];
-            sprintf(buf, "Button: %s###Button", name); // ### operator override ID ignoring the preceding label
-            ImGui::Button(buf);
-            if (ImGui::BeginPopupContextItem())
-            {
-                ImGui::Text("Edit name:");
-                ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
-                if (ImGui::Button("Close"))
-                    ImGui::CloseCurrentPopup();
-                ImGui::EndPopup();
-            }
-            ImGui::SameLine(); ImGui::Text("(<-- right-click here)");
-        }
+        ImGui::SameLine(); ImGui::Text("(<-- right-click here)");
 
         ImGui::TreePop();
     }
@@ -3510,7 +3469,6 @@ static void EditTableColumnsFlags(ImGuiTableColumnFlags* p_flags)
     ImGui::CheckboxFlags("_NoSort", p_flags, ImGuiTableColumnFlags_NoSort);
     ImGui::CheckboxFlags("_NoSortAscending", p_flags, ImGuiTableColumnFlags_NoSortAscending);
     ImGui::CheckboxFlags("_NoSortDescending", p_flags, ImGuiTableColumnFlags_NoSortDescending);
-    ImGui::CheckboxFlags("_NoHeaderLabel", p_flags, ImGuiTableColumnFlags_NoHeaderLabel);
     ImGui::CheckboxFlags("_NoHeaderWidth", p_flags, ImGuiTableColumnFlags_NoHeaderWidth);
     ImGui::CheckboxFlags("_PreferSortAscending", p_flags, ImGuiTableColumnFlags_PreferSortAscending);
     ImGui::CheckboxFlags("_PreferSortDescending", p_flags, ImGuiTableColumnFlags_PreferSortDescending);
@@ -5503,7 +5461,7 @@ static void ShowDemoWindowMisc()
             ImGui::InputText("3", buf, IM_ARRAYSIZE(buf));
             ImGui::PushAllowKeyboardFocus(false);
             ImGui::InputText("4 (tab skip)", buf, IM_ARRAYSIZE(buf));
-            ImGui::SameLine(); HelpMarker("Item won't be cycled through when using TAB or Shift+Tab.");
+            //ImGui::SameLine(); HelpMarker("Use ImGui::PushAllowKeyboardFocus(bool) to disable tabbing through certain widgets.");
             ImGui::PopAllowKeyboardFocus();
             ImGui::InputText("5", buf, IM_ARRAYSIZE(buf));
             ImGui::TreePop();
@@ -5529,7 +5487,6 @@ static void ShowDemoWindowMisc()
             if (focus_3) ImGui::SetKeyboardFocusHere();
             ImGui::InputText("3 (tab skip)", buf, IM_ARRAYSIZE(buf));
             if (ImGui::IsItemActive()) has_focus = 3;
-            ImGui::SameLine(); HelpMarker("Item won't be cycled through when using TAB or Shift+Tab.");
             ImGui::PopAllowKeyboardFocus();
 
             if (has_focus)
@@ -5747,13 +5704,29 @@ void ImGui::ShowAboutWindow(bool* p_open)
 //-----------------------------------------------------------------------------
 // [SECTION] Style Editor / ShowStyleEditor()
 //-----------------------------------------------------------------------------
-// - ShowFontSelector()
 // - ShowStyleSelector()
+// - ShowFontSelector()
 // - ShowStyleEditor()
 //-----------------------------------------------------------------------------
 
-// Forward declare ShowFontAtlas() which isn't worth putting in public API yet
-namespace ImGui { IMGUI_API void ShowFontAtlas(ImFontAtlas* atlas); }
+// Demo helper function to select among default colors. See ShowStyleEditor() for more advanced options.
+// Here we use the simplified Combo() api that packs items into a single literal string.
+// Useful for quick combo boxes where the choices are known locally.
+bool ImGui::ShowStyleSelector(const char* label)
+{
+    static int style_idx = -1;
+    if (ImGui::Combo(label, &style_idx, "Dark\0Light\0Classic\0"))
+    {
+        switch (style_idx)
+        {
+        case 0: ImGui::StyleColorsDark(); break;
+        case 1: ImGui::StyleColorsLight(); break;
+        case 2: ImGui::StyleColorsClassic(); break;
+        }
+        return true;
+    }
+    return false;
+}
 
 // Demo helper function to select among loaded fonts.
 // Here we use the regular BeginCombo()/EndCombo() api which is more the more flexible one.
@@ -5781,23 +5754,92 @@ void ImGui::ShowFontSelector(const char* label)
         "- If you need to add/remove fonts at runtime (e.g. for DPI change), do it before calling NewFrame().");
 }
 
-// Demo helper function to select among default colors. See ShowStyleEditor() for more advanced options.
-// Here we use the simplified Combo() api that packs items into a single literal string.
-// Useful for quick combo boxes where the choices are known locally.
-bool ImGui::ShowStyleSelector(const char* label)
+// [Internal] Display details for a single font, called by ShowStyleEditor().
+static void NodeFont(ImFont* font)
 {
-    static int style_idx = -1;
-    if (ImGui::Combo(label, &style_idx, "Dark\0Light\0Classic\0"))
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiStyle& style = ImGui::GetStyle();
+    bool font_details_opened = ImGui::TreeNode(font, "Font: \"%s\"\n%.2f px, %d glyphs, %d file(s)",
+        font->ConfigData ? font->ConfigData[0].Name : "", font->FontSize, font->Glyphs.Size, font->ConfigDataCount);
+    ImGui::SameLine(); if (ImGui::SmallButton("Set as default")) { io.FontDefault = font; }
+    if (!font_details_opened)
+        return;
+
+    ImGui::PushFont(font);
+    ImGui::Text("The quick brown fox jumps over the lazy dog");
+    ImGui::PopFont();
+    ImGui::DragFloat("Font scale", &font->Scale, 0.005f, 0.3f, 2.0f, "%.1f");   // Scale only this font
+    ImGui::SameLine(); HelpMarker(
+        "Note than the default embedded font is NOT meant to be scaled.\n\n"
+        "Font are currently rendered into bitmaps at a given size at the time of building the atlas. "
+        "You may oversample them to get some flexibility with scaling. "
+        "You can also render at multiple sizes and select which one to use at runtime.\n\n"
+        "(Glimmer of hope: the atlas system will be rewritten in the future to make scaling more flexible.)");
+    ImGui::Text("Ascent: %f, Descent: %f, Height: %f", font->Ascent, font->Descent, font->Ascent - font->Descent);
+    ImGui::Text("Fallback character: '%c' (U+%04X)", font->FallbackChar, font->FallbackChar);
+    ImGui::Text("Ellipsis character: '%c' (U+%04X)", font->EllipsisChar, font->EllipsisChar);
+    const int surface_sqrt = (int)sqrtf((float)font->MetricsTotalSurface);
+    ImGui::Text("Texture Area: about %d px ~%dx%d px", font->MetricsTotalSurface, surface_sqrt, surface_sqrt);
+    for (int config_i = 0; config_i < font->ConfigDataCount; config_i++)
+        if (font->ConfigData)
+            if (const ImFontConfig* cfg = &font->ConfigData[config_i])
+                ImGui::BulletText("Input %d: \'%s\', Oversample: (%d,%d), PixelSnapH: %d, Offset: (%.1f,%.1f)",
+                    config_i, cfg->Name, cfg->OversampleH, cfg->OversampleV, cfg->PixelSnapH, cfg->GlyphOffset.x, cfg->GlyphOffset.y);
+    if (ImGui::TreeNode("Glyphs", "Glyphs (%d)", font->Glyphs.Size))
     {
-        switch (style_idx)
+        // Display all glyphs of the fonts in separate pages of 256 characters
+        const ImU32 glyph_col = ImGui::GetColorU32(ImGuiCol_Text);
+        for (unsigned int base = 0; base <= IM_UNICODE_CODEPOINT_MAX; base += 256)
         {
-        case 0: ImGui::StyleColorsDark(); break;
-        case 1: ImGui::StyleColorsLight(); break;
-        case 2: ImGui::StyleColorsClassic(); break;
+            // Skip ahead if a large bunch of glyphs are not present in the font (test in chunks of 4k)
+            // This is only a small optimization to reduce the number of iterations when IM_UNICODE_MAX_CODEPOINT
+            // is large // (if ImWchar==ImWchar32 we will do at least about 272 queries here)
+            if (!(base & 4095) && font->IsGlyphRangeUnused(base, base + 4095))
+            {
+                base += 4096 - 256;
+                continue;
+            }
+
+            int count = 0;
+            for (unsigned int n = 0; n < 256; n++)
+                if (font->FindGlyphNoFallback((ImWchar)(base + n)))
+                    count++;
+            if (count <= 0)
+                continue;
+            if (!ImGui::TreeNode((void*)(intptr_t)base, "U+%04X..U+%04X (%d %s)", base, base + 255, count, count > 1 ? "glyphs" : "glyph"))
+                continue;
+            float cell_size = font->FontSize * 1;
+            float cell_spacing = style.ItemSpacing.y;
+            ImVec2 base_pos = ImGui::GetCursorScreenPos();
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            for (unsigned int n = 0; n < 256; n++)
+            {
+                // We use ImFont::RenderChar as a shortcut because we don't have UTF-8 conversion functions
+                // available here and thus cannot easily generate a zero-terminated UTF-8 encoded string.
+                ImVec2 cell_p1(base_pos.x + (n % 16) * (cell_size + cell_spacing), base_pos.y + (n / 16) * (cell_size + cell_spacing));
+                ImVec2 cell_p2(cell_p1.x + cell_size, cell_p1.y + cell_size);
+                const ImFontGlyph* glyph = font->FindGlyphNoFallback((ImWchar)(base + n));
+                draw_list->AddRect(cell_p1, cell_p2, glyph ? IM_COL32(255, 255, 255, 100) : IM_COL32(255, 255, 255, 50));
+                if (glyph)
+                    font->RenderChar(draw_list, cell_size, cell_p1, glyph_col, (ImWchar)(base + n));
+                if (glyph && ImGui::IsMouseHoveringRect(cell_p1, cell_p2))
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Codepoint: U+%04X", base + n);
+                    ImGui::Separator();
+                    ImGui::Text("Visible: %d", glyph->Visible);
+                    ImGui::Text("AdvanceX: %.1f", glyph->AdvanceX);
+                    ImGui::Text("Pos: (%.2f,%.2f)->(%.2f,%.2f)", glyph->X0, glyph->Y0, glyph->X1, glyph->Y1);
+                    ImGui::Text("UV: (%.3f,%.3f)->(%.3f,%.3f)", glyph->U0, glyph->V0, glyph->U1, glyph->V1);
+                    ImGui::EndTooltip();
+                }
+            }
+            ImGui::Dummy(ImVec2((cell_size + cell_spacing) * 16, (cell_size + cell_spacing) * 16));
+            ImGui::TreePop();
         }
-        return true;
+        ImGui::TreePop();
     }
-    return false;
+    ImGui::TreePop();
 }
 
 void ImGui::ShowStyleEditor(ImGuiStyle* ref)
@@ -5956,7 +5998,21 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             ImGuiIO& io = ImGui::GetIO();
             ImFontAtlas* atlas = io.Fonts;
             HelpMarker("Read FAQ and docs/FONTS.md for details on font loading.");
-            ImGui::ShowFontAtlas(atlas);
+            ImGui::PushItemWidth(120);
+            for (int i = 0; i < atlas->Fonts.Size; i++)
+            {
+                ImFont* font = atlas->Fonts[i];
+                ImGui::PushID(font);
+                NodeFont(font);
+                ImGui::PopID();
+            }
+            if (ImGui::TreeNode("Atlas texture", "Atlas texture (%dx%d pixels)", atlas->TexWidth, atlas->TexHeight))
+            {
+                ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+                ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
+                ImGui::Image(atlas->TexID, ImVec2((float)atlas->TexWidth, (float)atlas->TexHeight), ImVec2(0, 0), ImVec2(1, 1), tint_col, border_col);
+                ImGui::TreePop();
+            }
 
             // Post-baking font scaling. Note that this is NOT the nice way of scaling fonts, read below.
             // (we enforce hard clamping manually as by default DragFloat/SliderFloat allows CTRL+Click text to get out of bounds).
@@ -5968,7 +6024,6 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 "rebuild the font atlas, and call style.ScaleAllSizes() on a reference ImGuiStyle structure.\n"
                 "Using those settings here will give you poor quality results.");
             static float window_scale = 1.0f;
-            ImGui::PushItemWidth(ImGui::GetFontSize() * 8);
             if (ImGui::DragFloat("window scale", &window_scale, 0.005f, MIN_SCALE, MAX_SCALE, "%.2f", ImGuiSliderFlags_AlwaysClamp)) // Scale only this window
                 ImGui::SetWindowFontScale(window_scale);
             ImGui::DragFloat("global scale", &io.FontGlobalScale, 0.005f, MIN_SCALE, MAX_SCALE, "%.2f", ImGuiSliderFlags_AlwaysClamp); // Scale everything
@@ -5988,7 +6043,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             HelpMarker("Faster lines using texture data. Require backend to render with bilinear filtering (not point/nearest filtering).");
 
             ImGui::Checkbox("Anti-aliased fill", &style.AntiAliasedFill);
-            ImGui::PushItemWidth(ImGui::GetFontSize() * 8);
+            ImGui::PushItemWidth(100);
             ImGui::DragFloat("Curve Tessellation Tolerance", &style.CurveTessellationTol, 0.02f, 0.10f, 10.0f, "%.2f");
             if (style.CurveTessellationTol < 0.10f) style.CurveTessellationTol = 0.10f;
 
@@ -6036,50 +6091,6 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
 
             ImGui::DragFloat("Global Alpha", &style.Alpha, 0.005f, 0.20f, 1.0f, "%.2f"); // Not exposing zero here so user doesn't "lose" the UI (zero alpha clips all widgets). But application code could have a toggle to switch between zero and non-zero.
             ImGui::PopItemWidth();
-
-            ImGui::EndTabItem();
-        }
-
-        if (ImGui::BeginTabItem("Shadows"))
-        {
-            ImGui::Text("Window shadows:");
-            ImGui::ColorEdit4("Color", (float*)&style.Colors[ImGuiCol_WindowShadow], ImGuiColorEditFlags_AlphaBar);
-            ImGui::SameLine();
-            HelpMarker("Same as 'WindowShadow' in Colors tab.");
-
-            ImGui::SliderFloat("Size", &style.WindowShadowSize, 0.0f, 128.0f, "%.1f");
-            ImGui::SameLine();
-            HelpMarker("Set shadow size to zero to disable shadows.");
-            ImGui::SliderFloat("Offset distance", &style.WindowShadowOffsetDist, 0.0f, 64.0f, "%.0f");
-            ImGui::SliderAngle("Offset angle", &style.WindowShadowOffsetAngle);
-
-            // FIXME-SHADOWS: Revert ref breaks (doesn't call StyleUpdateTexture)
-            ImGuiIO& io = ImGui::GetIO();
-            ImGuiStyleShadowTexConfig* shadow_cfg = &style.ShadowTexConfig;
-            ImGui::Spacing();
-            ImGui::Text("Shadow Texture");
-            ImGui::SameLine();
-            HelpMarker("These settings can only be edited after initialization if the rendering back-end implements ImGuiBackendFlags_RendererHasTexReload.");
-
-            // Because editing these parameters after initialization requires font atlas reloading, disable them if the back-end does not support it
-            const bool editing_allowed = (io.BackendFlags & ImGuiBackendFlags_RendererHasTexReload) != 0;
-            if (!editing_allowed)
-            {
-                ImGui::TextWrapped("Error: Rendering back-end needs to support ImGuiBackendFlags_RendererHasTexReload in order to be able to change settings at runtime!");
-                ImGui::PushStyleVar(ImGuiStyleVar_Alpha, style.Alpha * 0.5f);
-            }
-
-            bool need_rebuild = false;
-            need_rebuild |= ImGui::SliderInt("Corner size", &shadow_cfg->TexCornerSize, 4, 128);
-            need_rebuild |= ImGui::SliderInt("Edge size", &shadow_cfg->TexEdgeSize, 1, 128);
-            need_rebuild |= ImGui::SliderFloat("Falloff power", &shadow_cfg->TexFalloffPower, 0.1f, 8.0f, "%.2f");
-            need_rebuild |= ImGui::SliderFloat("Distance field offset", &shadow_cfg->TexDistanceFieldOffset, -16.0f, 16.0f, "%.2f");
-            need_rebuild |= ImGui::Checkbox("Blur texture", &shadow_cfg->TexBlur);
-
-            if (!editing_allowed)
-                ImGui::PopStyleVar();
-            if (need_rebuild && editing_allowed)
-                ImGui::StyleUpdateTexture();
 
             ImGui::EndTabItem();
         }
@@ -7336,165 +7347,6 @@ static void ShowExampleAppCustomRendering(bool* p_open)
             for (int n = 0; n < points.Size; n += 2)
                 draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
             draw_list->PopClipRect();
-
-            ImGui::EndTabItem();
-        }
-
-        if (ImGui::BeginTabItem("Shadows"))
-        {
-            static float shadow_thickness = 40.0f;
-            static ImVec4 shadow_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-            static bool shadow_filled = false;
-            static ImVec4 shape_color = ImVec4(0.9f, 0.6f, 0.3f, 1.0f);
-            static float shape_rounding = 0.0f;
-            static ImVec2 shadow_offset(0.0f, 0.0f);
-            static ImVec4 background_color = ImVec4(0.5f, 0.5f, 0.7f, 1.0f);
-            static bool wireframe = false;
-            static bool aa = true;
-            static int poly_shape_index = 0;
-            ImGui::Checkbox("Shadow filled", &shadow_filled);
-            ImGui::SameLine();
-            HelpMarker("This will fill the section behind the shape to shadow. It's often unnecessary and wasteful but provided for consistency.");
-            ImGui::Checkbox("Wireframe shapes", &wireframe);
-            ImGui::SameLine();
-            HelpMarker("This draws the shapes in wireframe so you can see the shadow underneath.");
-            ImGui::Checkbox("Anti-aliasing", &aa);
-
-            ImGui::DragFloat("Shadow Thickness", &shadow_thickness, 1.0f, 0.0f, 100.0f, "%.02f");
-            ImGui::SliderFloat2("Offset", (float*)&shadow_offset, -32.0f, 32.0f);
-            ImGui::SameLine();
-            HelpMarker("Note that currently circles/convex shapes do not support non-zero offsets for unfilled shadows.");
-            ImGui::ColorEdit4("Background Color", &background_color.x);
-            ImGui::ColorEdit4("Shadow Color", &shadow_color.x);
-            ImGui::ColorEdit4("Shape Color", &shape_color.x);
-            ImGui::DragFloat("Shape Rounding", &shape_rounding, 1.0f, 0.0f, 20.0f, "%.02f");
-            ImGui::Combo("Convex shape", &poly_shape_index, "Shape 1\0Shape 2\0Shape 3\0Shape 4\0Shape 4 (winding reversed)");
-
-            ImDrawList* draw_list = ImGui::GetWindowDrawList();
-            ImDrawListFlags old_flags = draw_list->Flags;
-
-            if (aa)
-                draw_list->Flags |= ~ImDrawListFlags_AntiAliasedFill;
-            else
-                draw_list->Flags &= ~ImDrawListFlags_AntiAliasedFill;
-
-            // Fill a strip of background
-            draw_list->AddRectFilled(ImVec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y), ImVec2(ImGui::GetCursorScreenPos().x + ImGui::GetWindowContentRegionMax().x, ImGui::GetCursorScreenPos().y + 200.0f), ImGui::GetColorU32(background_color));
-
-            // Rectangle
-            {
-                ImVec2 p = ImGui::GetCursorScreenPos();
-                ImGui::Dummy(ImVec2(200.0f, 200.0f));
-
-                ImVec2 r1(p.x + 50.0f, p.y + 50.0f);
-                ImVec2 r2(p.x + 150.0f, p.y + 150.0f);
-                ImDrawFlags draw_flags = shadow_filled ? ImDrawFlags_None : ImDrawFlags_ShadowCutOutShapeBackground;
-                draw_list->AddShadowRect(r1, r2, ImGui::GetColorU32(shadow_color), shadow_thickness, shadow_offset, draw_flags, shape_rounding);
-
-                if (wireframe)
-                    draw_list->AddRect(r1, r2, ImGui::GetColorU32(shape_color), shape_rounding);
-                else
-                    draw_list->AddRectFilled(r1, r2, ImGui::GetColorU32(shape_color), shape_rounding);
-            }
-
-            ImGui::SameLine();
-
-            // Circle
-            {
-                ImVec2 p = ImGui::GetCursorScreenPos();
-                ImGui::Dummy(ImVec2(200.0f, 200.0f));
-
-                // FIXME-SHADOWS: Offset forced to zero when shadow is not filled because it isn't supported
-                float off = 10.0f;
-                ImVec2 r1(p.x + 50.0f + off, p.y + 50.0f + off);
-                ImVec2 r2(p.x + 150.0f - off, p.y + 150.0f - off);
-                ImVec2 center(p.x + 100.0f, p.y + 100.0f);
-                ImDrawFlags draw_flags = shadow_filled ? ImDrawFlags_None : ImDrawFlags_ShadowCutOutShapeBackground;
-                draw_list->AddShadowCircle(center, 50.0f, ImGui::GetColorU32(shadow_color), shadow_thickness, shadow_filled ? shadow_offset : ImVec2(0.0f, 0.0f), draw_flags, 0);
-
-                if (wireframe)
-                    draw_list->AddCircle(center, 50.0f, ImGui::GetColorU32(shape_color), 0);
-                else
-                    draw_list->AddCircleFilled(center, 50.0f, ImGui::GetColorU32(shape_color), 0);
-            }
-
-            ImGui::SameLine();
-
-            // Convex shape
-            {
-                ImVec2 pos = ImGui::GetCursorScreenPos();
-                ImGui::Dummy(ImVec2(200.0f, 200.0f));
-
-                const ImVec2 poly_centre(pos.x + 50.0f, pos.y + 100.0f);
-                ImVec2 poly_points[8];
-                int poly_points_count = 0;
-
-                switch (poly_shape_index)
-                {
-                default:
-                case 0:
-                {
-                    poly_points[0] = ImVec2(poly_centre.x - 32.0f, poly_centre.y);
-                    poly_points[1] = ImVec2(poly_centre.x - 24.0f, poly_centre.y + 24.0f);
-                    poly_points[2] = ImVec2(poly_centre.x, poly_centre.y + 32.0f);
-                    poly_points[3] = ImVec2(poly_centre.x + 24.0f, poly_centre.y + 24.0f);
-                    poly_points[4] = ImVec2(poly_centre.x + 32.0f, poly_centre.y);
-                    poly_points[5] = ImVec2(poly_centre.x + 24.0f, poly_centre.y - 24.0f);
-                    poly_points[6] = ImVec2(poly_centre.x, poly_centre.y - 32.0f);
-                    poly_points[7] = ImVec2(poly_centre.x - 32.0f, poly_centre.y - 32.0f);
-                    poly_points_count = 8;
-                    break;
-                }
-                case 1:
-                {
-                    poly_points[0] = ImVec2(poly_centre.x + 40.0f, poly_centre.y - 20.0f);
-                    poly_points[1] = ImVec2(poly_centre.x, poly_centre.y + 32.0f);
-                    poly_points[2] = ImVec2(poly_centre.x - 24.0f, poly_centre.y - 32.0f);
-                    poly_points_count = 3;
-                    break;
-                }
-                case 2:
-                {
-                    poly_points[0] = ImVec2(poly_centre.x - 32.0f, poly_centre.y);
-                    poly_points[1] = ImVec2(poly_centre.x, poly_centre.y + 32.0f);
-                    poly_points[2] = ImVec2(poly_centre.x + 32.0f, poly_centre.y);
-                    poly_points[3] = ImVec2(poly_centre.x, poly_centre.y - 32.0f);
-                    poly_points_count = 4;
-                    break;
-                }
-                case 3:
-                {
-                    poly_points[0] = ImVec2(poly_centre.x - 4.0f, poly_centre.y - 20.0f);
-                    poly_points[1] = ImVec2(poly_centre.x + 12.0f, poly_centre.y + 2.0f);
-                    poly_points[2] = ImVec2(poly_centre.x + 8.0f, poly_centre.y + 16.0f);
-                    poly_points[3] = ImVec2(poly_centre.x, poly_centre.y + 32.0f);
-                    poly_points[4] = ImVec2(poly_centre.x - 16.0f, poly_centre.y - 32.0f);
-                    poly_points_count = 5;
-                    break;
-                }
-                case 4: // Same as test case 3 but with reversed winding
-                {
-                    poly_points[0] = ImVec2(poly_centre.x - 16.0f, poly_centre.y - 32.0f);
-                    poly_points[1] = ImVec2(poly_centre.x, poly_centre.y + 32.0f);
-                    poly_points[2] = ImVec2(poly_centre.x + 8.0f, poly_centre.y + 16.0f);
-                    poly_points[3] = ImVec2(poly_centre.x + 12.0f, poly_centre.y + 2.0f);
-                    poly_points[4] = ImVec2(poly_centre.x - 4.0f, poly_centre.y - 20.0f);
-                    poly_points_count = 5;
-                    break;
-                }
-                }
-
-                // FIXME-SHADOWS: Offset forced to zero when shadow is not filled because it isn't supported
-                ImDrawFlags draw_flags = shadow_filled ? ImDrawFlags_None : ImDrawFlags_ShadowCutOutShapeBackground;
-                draw_list->AddShadowConvexPoly(poly_points, poly_points_count, ImGui::GetColorU32(shadow_color), shadow_thickness, shadow_filled ? shadow_offset : ImVec2(0.0f, 0.0f), draw_flags);
-
-                if (wireframe)
-                    draw_list->AddPolyline(poly_points, poly_points_count, ImGui::GetColorU32(shape_color), true, 1.0f);
-                else
-                    draw_list->AddConvexPolyFilled(poly_points, poly_points_count, ImGui::GetColorU32(shape_color));
-            }
-
-            draw_list->Flags = old_flags;
 
             ImGui::EndTabItem();
         }
