@@ -13,7 +13,7 @@
 #include <d3d12.h>
 #include <chrono>
 
-static HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterval, UINT flags)
+__declspec(dllexport) HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterval, UINT flags)
 {
     if (pSwapChain == nullptr) {
         return hooks->originalPresent(pSwapChain, syncInterval, flags);
@@ -36,7 +36,7 @@ static HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterv
     return result;
 }
 
-static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ImGuiIO& io = ImGui::GetIO();
     switch (uMsg) {
