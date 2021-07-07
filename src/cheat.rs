@@ -29,7 +29,6 @@ impl Cheat {
     }
 
     pub unsafe fn render(&self, overlay: &ImguiOverlay) {
-        overlay.draw_text([100.0, 100.0], &format!("len: {}", &crate::fonts::FONTS.len()), TextOptions::default().font(Font::Verdana));
         if GAMEDATA.valid {
             hacks::esp::render(&GAMEDATA, overlay, &CONFIG);
         }
