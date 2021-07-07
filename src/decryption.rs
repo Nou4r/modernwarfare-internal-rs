@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use crate::util::Global;
+use crate::util::{Global, is_bad_ptr};
 use crate::memory::MEMORY;
 use crate::sdk;
 
@@ -45,10 +45,18 @@ impl Decryption {
             self.reset();
             return;
         }
+        if is_bad_ptr(client_info) {
+            self.reset();
+            return;
+        }
         self.client_info = Some(client_info);
 
         let client_base = decrypt_client_base(client_info, MEMORY.image_base, MEMORY.peb);
         if client_base == 0 {
+            self.client_base = None;
+            return;
+        }
+        if is_bad_ptr(client_base) {
             self.client_base = None;
             return;
         }
