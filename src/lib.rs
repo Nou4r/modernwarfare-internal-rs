@@ -1,6 +1,7 @@
 #![feature(llvm_asm)]
 #![feature(destructuring_assignment)]
 #![feature(maybe_uninit_ref)]
+#![feature(type_name_of_val)]
 #![allow(clippy::missing_safety_doc)]
 
 use std::ptr::null_mut;
@@ -16,6 +17,8 @@ use crate::gamedata::GAMEDATA;
 use crate::gui::GUI;
 use crate::memory::MEMORY;
 use crate::overlay::ImguiOverlay;
+use std::fmt::Debug;
+use std::panic::PanicInfo;
 
 pub mod cheat;
 pub mod gui;
@@ -72,9 +75,9 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         });
         GUI.get_mut().render(&ui);
 
-        CHEAT.get_mut().last_frame_time = start.elapsed()
+        CHEAT.get_mut().last_frame_time = start.elapsed();
     }) {
-        error!("Panic during frame: {:?}", e);
+        error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
     }
 }
 

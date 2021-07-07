@@ -115,6 +115,7 @@ fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut 
 /// This is where prediction should be implemented
 fn get_aim_position(player: &Player, gamedata: &Gamedata, ctx: &AimbotContext) -> Vector3 {
     let player_history = CHEAT.gamedata_history.iter()
+        .filter(|(_, gamedata)| gamedata.player_by_id(player.id).is_some())
         .map(|(instant, gamedata)| (*instant, gamedata.player_by_id(player.id).unwrap().origin))
         .collect::<VecDeque<_>>();
     let target = Target::from_location_history(&player.origin, &player_history);
