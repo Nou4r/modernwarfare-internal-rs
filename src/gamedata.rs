@@ -61,6 +61,11 @@ impl Gamedata {
 
         self.local_index = sdk::local_index();
 
+        if !self.players.iter().any(|p| p.id == self.local_index) {
+            log::warn!("Could not find local player while updating gameinfo");
+            return;
+        }
+
         (self.camera_pos, self.camera_angles) = match sdk::get_camera() {
             Some(n) => n,
             None => {
