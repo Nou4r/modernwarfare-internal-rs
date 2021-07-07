@@ -6,7 +6,7 @@ pub const CAMERA_POS: u64 = 0x1D8;
 pub const LOCAL_INDEX: u64 = 0x38C00;
 pub const LOCAL_INDEX_POS: u64 = 0x1FC;
 pub const RECOIL: u64 = 0x24CEC;
-pub const GAME_MODE: u64 = 0x16E8DB6C;
+pub const GAME_MODE: u64 = 0x16E8DB68;
 pub const WEAPON_DEFINITIONS: u64 = 0x144EB300;
 pub const UNIT_SCALE: f32 = 0.0254;
 
