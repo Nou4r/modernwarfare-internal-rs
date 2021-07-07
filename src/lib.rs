@@ -56,21 +56,25 @@ pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
 
 #[no_mangle]
 pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
-    let start = Instant::now();
+    if let Err(e) = std::panic::catch_unwind(|| {
+        let start = Instant::now();
 
-    static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
-    let ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
-    ctx.io_mut().want_capture_mouse = GUI.is_open();
+        static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
+        let ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
+        ctx.io_mut().want_capture_mouse = GUI.is_open();
 
-    let ui = imgui::Ui { ctx, font_atlas: None };
+        let ui = imgui::Ui { ctx, font_atlas: None };
 
-    CHEAT.get_mut().tick();
-    ImguiOverlay::build(&ui, |overlay| {
-        CHEAT.get_mut().render(&overlay);
-    });
-    GUI.get_mut().render(&ui);
+        CHEAT.get_mut().tick();
+        ImguiOverlay::build(&ui, |overlay| {
+            CHEAT.get_mut().render(&overlay);
+        });
+        GUI.get_mut().render(&ui);
 
-    CHEAT.get_mut().last_frame_time = start.elapsed()
+        CHEAT.get_mut().last_frame_time = start.elapsed()
+    }) {
+        error!("Panic during frame: {:?}", e);
+    }
 }
 
 #[no_mangle]
