@@ -31,6 +31,7 @@ pub mod overlay;
 pub mod hacks;
 pub mod config;
 pub mod fonts;
+pub mod prediction;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
@@ -77,17 +78,16 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
     }
 }
 
+#[repr(i32)]
+#[derive(Copy, Clone, PartialEq)]
+pub enum InputType {
+    KeyDown = 0,
+    KeyUp = 1
+}
+
 #[no_mangle]
-pub unsafe extern "C" fn on_input_event(input_type: i32, key: i32) {
-    // KeyDown
-    if input_type == 0 {
-        use winapi::um::winuser::*;
-        match key {
-            VK_INSERT => GUI.get_mut().handle_toggle(),
-            VK_END => unload_cheat(),
-            _ => {}
-        }
-    }
+pub unsafe extern "C" fn on_input_event(input_type: InputType, key: i32) {
+    CHEAT.get_mut().handle_input(input_type, key);
 }
 
 #[link(name = "framework")]

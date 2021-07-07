@@ -59,13 +59,48 @@ static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 return CallWindowProc(hooks->originalWndProc, hWnd, uMsg, wParam, lParam);
             }
         }
-            // TODO: Add mouse events
         case WM_KEYDOWN: {
             on_input_event(static_cast<int32_t>(InputEventType::KeyDown), wParam);
             break;
         }
         case WM_KEYUP: {
             on_input_event(static_cast<int32_t>(InputEventType::KeyUp), wParam);
+            break;
+        }
+
+        case WM_LBUTTONDOWN: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), VK_LBUTTON);
+            break;
+        }
+        case WM_LBUTTONUP: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), VK_LBUTTON);
+            break;
+        }
+
+        case WM_RBUTTONDOWN: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), VK_RBUTTON);
+            break;
+        }
+        case WM_RBUTTONUP: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), VK_RBUTTON);
+            break;
+        }
+
+        case WM_MBUTTONDOWN: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), VK_MBUTTON);
+            break;
+        }
+        case WM_MBUTTONUP: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), VK_MBUTTON);
+            break;
+        }
+
+        case WM_XBUTTONDOWN: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
+            break;
+        }
+        case WM_XBUTTONUP: {
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
             break;
         }
     };
@@ -75,6 +110,11 @@ static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP ||
          uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE ||
          uMsg == WM_MOUSEHOVER || uMsg == WM_KEYDOWN || uMsg == WM_KEYUP)) {
+        return TRUE;
+    }
+    if (io.WantCaptureKeyboard && (
+            uMsg == WM_KEYDOWN || uMsg == WM_KEYUP
+            )) {
         return TRUE;
     }
 
