@@ -5,8 +5,8 @@ use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
-use crate::sdk;
-use crate::util::{Global, RenderState, try_read_memory};
+use crate::{sdk, offsets};
+use crate::util::{Global, RenderState, try_read_memory, keybind_select, read_memory};
 use crate::fonts::FONTS;
 
 pub static GUI: Global<Gui> = Global::new();
@@ -84,6 +84,34 @@ impl Gui {
                             ui.checkbox(im_str!("Flags"), &mut cfg.esp.flags_enabled);
                         }
                     });
+                    TabItem::new(im_str!("Aimbot"))
+                        .build(ui, || {
+                            ui.checkbox(im_str!("Enabled"), &mut cfg.aimbot.enabled);
+
+                            if cfg.aimbot.enabled {
+                                ui.checkbox(im_str!("Aim at Teammates"), &mut cfg.aimbot.aim_at_teammates);
+
+                                keybind_select(ui, &mut self.state, im_str!("Aimbot Key"), &mut cfg.aimbot.keybind);
+
+                                Slider::new(im_str!("FOV"))
+                                    .range(0.0..=180.0)
+                                    .display_format(im_str!("%.1f°"))
+                                    .build(ui, &mut cfg.aimbot.fov);
+
+                                Slider::new(im_str!("Speed"))
+                                    .range(0.0..=25.0)
+                                    .display_format(im_str!("%.1f"))
+                                    .build(ui, &mut cfg.aimbot.speed);
+
+                                Slider::new(im_str!("Max Distance"))
+                                    .range(0.0..=1500.0)
+                                    .display_format(im_str!("%.0fm"))
+                                    .build(ui, &mut cfg.aimbot.max_distance);
+                                if cfg.aimbot.max_distance > cfg.esp.max_distance {
+                                    cfg.esp.max_distance = cfg.aimbot.max_distance;
+                                }
+                            }
+                        });
                     TabItem::new(im_str!("Misc")).build(ui, || {
                         ui.checkbox(im_str!("No Recoil"), &mut cfg.no_recoil_enabled);
                     })
@@ -112,6 +140,7 @@ impl Gui {
                 debug!(crate::VERSION);
                 ui.text(im_str!("Frame Time: {:.2}", CHEAT.last_frame_time.as_secs_f32() * 1000.0));
                 debug!(ui.io().want_capture_mouse);
+                debug!(ui.io().want_capture_keyboard);
                 debug_hex!(MEMORY.image_base);
                 debug_hex!(MEMORY.peb);
                 ui.text(im_str!("\n"));
@@ -135,8 +164,11 @@ impl Gui {
                     debug!(sdk::local_index());
                 }
 
+                debug!(CHEAT.keys_down);
+                debug!(CHEAT.gamedata_history.len());
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
+                    debug!(GAMEDATA.local_player().weapon.velocity);
                 }
             });
     }

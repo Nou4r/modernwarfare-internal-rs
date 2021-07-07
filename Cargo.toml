@@ -18,3 +18,5 @@ log = "0.4.14"
 impl_ops = "0.1.1"
 backtrace = "0.3.60"
 rand = { version = "0.8.4", features = ["small_rng"] }
+linreg = "0.2.0"
+enigo = "0.0.14"

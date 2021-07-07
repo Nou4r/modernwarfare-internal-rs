@@ -6,7 +6,7 @@ use crate::sdk::{Player, RefDef, Stance};
 use crate::sdk;
 use crate::util::Global;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Gamedata {
     pub valid: bool,
     pub players: Vec<Player>,

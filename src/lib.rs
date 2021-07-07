@@ -1,10 +1,13 @@
 #![feature(llvm_asm)]
 #![feature(destructuring_assignment)]
 #![feature(maybe_uninit_ref)]
+#![feature(type_name_of_val)]
 #![allow(clippy::missing_safety_doc)]
 
+use std::ptr::null_mut;
 use std::time::Instant;
 
+use log::*;
 use log::LevelFilter;
 
 use crate::cheat::CHEAT;
@@ -14,8 +17,8 @@ use crate::gamedata::GAMEDATA;
 use crate::gui::GUI;
 use crate::memory::MEMORY;
 use crate::overlay::ImguiOverlay;
-use log::*;
-use std::ptr::null_mut;
+use std::fmt::Debug;
+use std::panic::PanicInfo;
 
 pub mod cheat;
 pub mod gui;
@@ -31,18 +34,11 @@ pub mod overlay;
 pub mod hacks;
 pub mod config;
 pub mod fonts;
+pub mod prediction;
 
-<<<<<<< Updated upstream
-pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"));
-// pub static DEBUG: bool = cfg!(debug_assertations);
-=======
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
-
-#[cfg(debug_assertions)]
->>>>>>> Stashed changes
+// pub static DEBUG: bool = cfg!(debug_assertations);
 pub static DEBUG: bool = true;
-#[cfg(not(debug_assertions))]
-pub static DEBUG: bool = false;
 
 #[no_mangle]
 pub unsafe extern "C" fn on_load() {
@@ -79,23 +75,22 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         });
         GUI.get_mut().render(&ui);
 
-        CHEAT.get_mut().last_frame_time = start.elapsed()
+        CHEAT.get_mut().last_frame_time = start.elapsed();
     }) {
-        error!("Panic during frame: {:?}", e);
+        error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
     }
 }
 
+#[repr(i32)]
+#[derive(Copy, Clone, PartialEq)]
+pub enum InputType {
+    KeyDown = 0,
+    KeyUp = 1,
+}
+
 #[no_mangle]
-pub unsafe extern "C" fn on_input_event(input_type: i32, key: i32) {
-    // KeyDown
-    if input_type == 0 {
-        use winapi::um::winuser::*;
-        match key {
-            VK_INSERT => GUI.get_mut().handle_toggle(),
-            VK_END => unload_cheat(),
-            _ => {}
-        }
-    }
+pub unsafe extern "C" fn on_input_event(input_type: InputType, key: i32) {
+    CHEAT.get_mut().handle_input(input_type, key);
 }
 
 #[link(name = "framework")]
