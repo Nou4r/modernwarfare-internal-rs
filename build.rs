@@ -16,7 +16,7 @@ fn main() {
     let git_branch = String::from_utf8(output.stdout).unwrap().replace("\"", "");
 
     let output = Command::new("git").args(&["status", "-s"]).output().unwrap();
-    let modified = String::from_utf8(output.stdout).unwrap().contains(" ");
+    let modified = String::from_utf8(output.stdout).unwrap().contains('M');
 
     println!("cargo:rustc-env=GIT_BRANCH={}", git_branch);
     println!("cargo:rustc-env=GIT_HASH={}", git_hash);
