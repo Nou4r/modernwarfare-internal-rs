@@ -7,11 +7,16 @@
 #include "xorstr.h"
 
 #include <Windows.h>
+#include <tlhelp32.h>
+#include <psapi.h>
 
 Memory::Memory() noexcept
 {
     imageBase = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
     peb = __readgsqword(0x60);
+    MODULEINFO mi;
+    GetModuleInformation(GetCurrentProcess(), reinterpret_cast<HMODULE>(imageBase), &mi, sizeof(mi));
+    imageSize = mi.SizeOfImage;
 }
 
 static HWND processHwnd;

@@ -15,9 +15,13 @@ pub struct EspConfig {
     pub enabled: bool,
     pub max_distance: f32,
     pub show_teammates: bool,
+    pub align: bool,
 
     pub box_enabled: bool,
     pub box_color: [f32; 4],
+
+    pub border_enabled: bool,
+    pub border_color: [f32; 4],
 
     pub name_enabled: bool,
     pub name_color: [f32; 4],
@@ -32,8 +36,11 @@ impl Default for EspConfig {
         Self {
             enabled: true,
             max_distance: 300.0,
+            align: true,
             box_enabled: true,
             box_color: ImColor32::WHITE.into(),
+            border_enabled: true,
+            border_color: [0.0, 0.0, 0.0, 0.75],
             name_enabled: true,
             name_color: ImColor32::WHITE.into(),
             distance_enabled: true,
@@ -70,7 +77,10 @@ pub fn render(gamedata: &Gamedata, overlay: &ImguiOverlay, config: &Config) {
 }
 
 fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: &Gamedata) -> Option<()> {
-    let bbox = player.get_bbox()?;
+    let mut bbox = player.get_bbox()?;
+    if config.esp.align {
+        bbox = (bbox.0.round(), bbox.1.round());
+    }
 
     let left_x = bbox.0.x;
     let bottom_y = bbox.0.y;
@@ -80,6 +90,11 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
     let height = bottom_y - top_y;
 
     let distance = units_to_m((gamedata.local_player().origin - player.origin).length());
+
+    // Draw border
+    if config.esp.border_enabled {
+        overlay.draw_list().add_rect(bbox.0.into(), bbox.1.into(), config.esp.border_color).thickness(3.0).build();
+    }
 
     // Draw box
     if config.esp.box_enabled {
@@ -137,7 +152,7 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
 
     // Draw distance
     if config.esp.distance_enabled {
-        draw_flag(&format!("{}m", distance), team_color.into());
+        draw_flag(&format!("{}m", distance.round()), team_color.into());
     }
 
     // Draw flags

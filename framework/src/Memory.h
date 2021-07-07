@@ -16,6 +16,7 @@ public:
     Memory() noexcept;
 
     std::uint64_t imageBase;
+    std::uint64_t imageSize;
     std::uint64_t peb;
 };
 

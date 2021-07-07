@@ -32,7 +32,9 @@ pub mod hacks;
 pub mod config;
 pub mod fonts;
 
-pub static VERSION: &str = env!("GIT_HASH");
+pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"));
+// pub static DEBUG: bool = cfg!(debug_assertations);
+pub static DEBUG: bool = true;
 
 #[no_mangle]
 pub unsafe extern "C" fn on_load() {
@@ -87,4 +89,5 @@ pub unsafe extern "C" fn on_input_event(input_type: i32, key: i32) {
 #[link(name = "framework")]
 extern "C" {
     fn unload_cheat();
+    fn show_memory_editor();
 }

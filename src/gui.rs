@@ -26,7 +26,10 @@ impl Gui {
     pub unsafe fn render(&mut self, ui: &Ui) {
         let _token = ui.push_font(*FONTS.get().get(&crate::fonts::Font::Verdana).unwrap());
 
-        self.show_deubg_window(ui);
+        if crate::DEBUG {
+            self.show_deubg_window(ui);
+            crate::show_memory_editor();
+        }
 
         if !self.open {
             return;
@@ -63,10 +66,15 @@ impl Gui {
                                 ColorEditFlags::DISPLAY_HSV | ColorEditFlags::ALPHA_BAR;
 
                             ui.checkbox(im_str!("Show Teammates"), &mut cfg.esp.show_teammates);
+                            ui.checkbox(im_str!("Align"), &mut cfg.esp.align);
 
                             ui.checkbox(im_str!("Box"), &mut cfg.esp.box_enabled);
                             ui.same_line();
-                            ColorEdit::new(im_str!("Box Color"), &mut cfg.esp.box_color).label(false).build(ui);
+                            ColorEdit::new(im_str!("Box Color"), &mut cfg.esp.box_color).label(false).flags(color_edit_flags).build(ui);
+
+                            ui.checkbox(im_str!("Box Border"), &mut cfg.esp.border_enabled);
+                            ui.same_line();
+                            ColorEdit::new(im_str!("Box Border Color"), &mut cfg.esp.border_color).label(false).build(ui);
 
                             ui.checkbox(im_str!("Name"), &mut cfg.esp.name_enabled);
                             ui.same_line();
