@@ -84,6 +84,9 @@ impl Gui {
                             ui.checkbox(im_str!("Distance"), &mut cfg.esp.distance_enabled);
                             ui.checkbox(im_str!("Flags"), &mut cfg.esp.flags_enabled);
                         }
+                    });
+                    TabItem::new(im_str!("Misc")).build(ui, || {
+                        ui.checkbox(im_str!("No Recoil"), &mut cfg.no_recoil_enabled);
                     })
                 })
             });

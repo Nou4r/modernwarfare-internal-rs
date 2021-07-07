@@ -25,7 +25,9 @@ impl Cheat {
         DECRYPTION.get_mut().update();
         GAMEDATA.get_mut().update();
 
-        // if GAMEDATA.valid {}
+        if GAMEDATA.valid {
+            // hacks::no_recoil::tick(&CONFIG);
+        }
     }
 
     pub unsafe fn render(&self, overlay: &ImguiOverlay) {
