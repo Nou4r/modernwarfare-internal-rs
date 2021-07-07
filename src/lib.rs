@@ -32,9 +32,17 @@ pub mod hacks;
 pub mod config;
 pub mod fonts;
 
+<<<<<<< Updated upstream
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
+=======
+pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
+
+#[cfg(debug_assertions)]
+>>>>>>> Stashed changes
 pub static DEBUG: bool = true;
+#[cfg(not(debug_assertions))]
+pub static DEBUG: bool = false;
 
 #[no_mangle]
 pub unsafe extern "C" fn on_load() {
