@@ -175,7 +175,7 @@ impl Gui {
                 debug_hex!(DECRYPTION.bone_base.unwrap_or(0));
                 ui.text(im_str!("\n"));
 
-                debug!(sdk::get_camera());
+                debug!(sdk::get_camera().is_some());
                 debug!(sdk::gamemode());
 
                 let refdef = sdk::get_refdef();
@@ -189,14 +189,13 @@ impl Gui {
                 }
 
                 if DECRYPTION.bone_base.is_some() {
-                    debug!(sdk::get_bone_matrix(sdk::local_index()));
+                    // debug!(sdk::get_bone_matrix(sdk::local_index()));
                 }
 
                 debug!(CHEAT.keys_down);
                 debug!(CHEAT.gamedata_history.len());
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
-                    debug!(GAMEDATA.local_player().weapon.velocity);
                 }
             });
     }
