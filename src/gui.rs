@@ -8,6 +8,7 @@ use crate::memory::MEMORY;
 use crate::{sdk, offsets};
 use crate::util::{Global, RenderState, try_read_memory, keybind_select, read_memory};
 use crate::fonts::FONTS;
+use crate::sdk::Bone;
 
 pub static GUI: Global<Gui> = Global::new();
 
@@ -48,7 +49,7 @@ impl Gui {
 
     fn show_config_window(&mut self, ui: &Ui, cfg: &mut Config) {
         Window::new(&im_str!("modernwarfare-internal {}", crate::VERSION))
-            .size([350.0, 300.0], Condition::FirstUseEver)
+            .size([350.0, 220.0], Condition::FirstUseEver)
             .resizable(false)
             .collapsible(false)
             .build(ui, || {
@@ -64,8 +65,7 @@ impl Gui {
 
                             let color_edit_flags = ColorEditFlags::NO_INPUTS | ColorEditFlags::NO_LABEL | ColorEditFlags::ALPHA_BAR;
 
-                            ui.checkbox(im_str!("Show Teammates"), &mut cfg.esp.show_teammates);
-                            ui.checkbox(im_str!("Align"), &mut cfg.esp.align);
+                            ui.columns(2, im_str!("esp_columns"), false);
 
                             ui.checkbox(im_str!("Box"), &mut cfg.esp.box_enabled);
                             ui.same_line();
@@ -87,9 +87,14 @@ impl Gui {
                             ui.same_line();
                             ColorEdit::new(im_str!("Name Color"), &mut cfg.esp.name_color).flags(color_edit_flags).build(ui);
 
+                            ui.next_column();
+                            ui.checkbox(im_str!("Show Teammates"), &mut cfg.esp.show_teammates);
+                            ui.checkbox(im_str!("Align"), &mut cfg.esp.align);
                             ui.checkbox(im_str!("Health"), &mut cfg.esp.health_bar_enabled);
                             ui.checkbox(im_str!("Distance"), &mut cfg.esp.distance_enabled);
                             ui.checkbox(im_str!("Flags"), &mut cfg.esp.flags_enabled);
+
+                            ui.columns(1, im_str!("end_columns"), false);
                         }
                     });
                     TabItem::new(im_str!("Aimbot"))
@@ -100,6 +105,17 @@ impl Gui {
                                 ui.checkbox(im_str!("Aim at Teammates"), &mut cfg.aimbot.aim_at_teammates);
 
                                 keybind_select(ui, &mut self.state, im_str!("Aimbot Key"), &mut cfg.aimbot.keybind);
+
+                                // Bone selector
+                                let bone_items = [Bone::Head, Bone::Chest, Bone::Tummy];
+                                let mut bone_index = bone_items.iter().position(|&b| b == cfg.aimbot.bone).unwrap_or(0);
+                                ComboBox::new(im_str!("Bone")).build_simple(
+                                    ui,
+                                    &mut bone_index,
+                                    &bone_items,
+                                    &|b| im_str!("{:?}", b).into()
+                                );
+                                cfg.aimbot.bone = bone_items[bone_index];
 
                                 Slider::new(im_str!("FOV"))
                                     .range(0.0..=180.0)

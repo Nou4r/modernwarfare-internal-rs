@@ -56,6 +56,7 @@ pub unsafe extern "C" fn on_load() {
 pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
     let mut ctx = imgui::Context::from_raw(ctx);
     fonts::init_fonts(&mut ctx, 1.0);
+    ctx.set_ini_filename(None);
 }
 
 #[no_mangle]
@@ -64,7 +65,7 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         let start = Instant::now();
 
         static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
-        let ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
+        let mut ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
         ctx.io_mut().want_capture_mouse = GUI.is_open();
 
         let ui = imgui::Ui { ctx, font_atlas: None };

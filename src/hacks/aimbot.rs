@@ -9,13 +9,14 @@ use crate::gamedata::Gamedata;
 use crate::math;
 use crate::math::Vector3;
 use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
-use crate::sdk::{m_to_units, Player, Stance, units_to_m};
+use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone};
 use enigo::MouseControllable;
 
 pub struct AimbotConfig {
     pub enabled: bool,
     pub aim_at_teammates: bool,
     pub max_distance: f32,
+    pub bone: Bone,
     pub fov: f32,
     pub speed: f32,
     pub keybind: i32,
@@ -29,6 +30,7 @@ impl Default for AimbotConfig {
         Self {
             enabled: true,
             aim_at_teammates: false,
+            bone: Bone::Head,
             max_distance: 400.0,
             fov: 30.0,
             speed: 2.0,
@@ -113,7 +115,7 @@ fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut 
 
 /// Gets the position to aim at given a player.
 /// This is where prediction should be implemented
-fn get_aim_position(player: &Player, gamedata: &Gamedata, ctx: &AimbotContext) -> Vector3 {
+fn get_aim_position(player: &Player, gamedata: &Gamedata, config: &AimbotConfig, ctx: &AimbotContext) -> Vector3 {
     let player_history = CHEAT.gamedata_history.iter()
         .filter(|(_, gamedata)| gamedata.player_by_id(player.id).is_some())
         .map(|(instant, gamedata)| (*instant, gamedata.player_by_id(player.id).unwrap().origin))
@@ -129,7 +131,10 @@ fn get_aim_position(player: &Player, gamedata: &Gamedata, ctx: &AimbotContext) -
 
     let pred_delta = pred_pos - player.origin;
 
-    player.estimate_head_position() + pred_delta
+    player.bones.get(&config.bone).copied().unwrap_or_else(|| match config.bone {
+        Bone::Head => player.estimate_head_position(),
+        _ => player.estimate_chest_position()
+    }) + pred_delta
 }
 
 
@@ -164,7 +169,7 @@ fn get_target<'a>(gamedata: &'a Gamedata, config: &AimbotConfig, ctx: &AimbotCon
             return None;
         }
 
-        let aim_position = get_aim_position(&player, &gamedata, &ctx);
+        let aim_position = get_aim_position(&player, &gamedata, config, &ctx);
         let angle = math::calculate_relative_angles(&gamedata.camera_pos, &aim_position, &gamedata.camera_angles).length();
         if angle > config.fov {
             return None;

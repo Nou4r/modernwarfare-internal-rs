@@ -102,4 +102,14 @@ impl Player {
         };
         self.origin + Vector3 { x: 0.0, y: 0.0, z: delta_z }
     }
+
+    pub fn estimate_chest_position(&self) -> Vector3 {
+        let delta_z = match self.stance {
+            Stance::Standing => 58.0,
+            Stance::Crouching => 40.0,
+            Stance::Crawling => 10.0,
+            Stance::Downed => 20.0,
+        };
+        self.origin + Vector3 { x: 0.0, y: 0.0, z: delta_z * 0.7 }
+    }
 }
