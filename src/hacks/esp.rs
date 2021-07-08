@@ -29,6 +29,9 @@ pub struct EspConfig {
     pub name_enabled: bool,
     pub name_color: [f32; 4],
 
+    pub snapline_enabled: bool,
+    pub snapline_color: [f32; 4],
+
     pub distance_enabled: bool,
     pub flags_enabled: bool,
     pub health_bar_enabled: bool,
@@ -48,6 +51,8 @@ impl Default for EspConfig {
             skeleton_color: [1.0, 1.0, 1.0, 1.0],
             name_enabled: true,
             name_color: ImColor32::WHITE.into(),
+            snapline_enabled: false,
+            snapline_color: [1.0, 1.0, 1.0, 1.0],
             distance_enabled: true,
             flags_enabled: true,
             health_bar_enabled: true,
@@ -138,6 +143,14 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
             Vector2 { x: left_x - 3.0, y: bottom_y + 1.0 - ((height) * (player.health as f32 / 127.0)) }.into(), // top right
             health_color,
         ).filled(true).build();
+    }
+
+    if config.esp.snapline_enabled {
+        overlay.draw_list().add_line(
+            [(gamedata.refdef().width as f32) / 2.0, gamedata.refdef().height as _],
+            [left_x + width / 2.0, bottom_y + 2.0],
+            config.esp.snapline_color
+        ).build();
     }
 
     // Draw flags

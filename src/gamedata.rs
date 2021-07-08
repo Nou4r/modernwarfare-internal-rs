@@ -85,6 +85,10 @@ impl Gamedata {
 
         self.valid = true;
     }
+
+    pub fn refdef(&self) -> &'static RefDef {
+        self.refdef.unwrap()
+    }
 }
 
 impl Player {

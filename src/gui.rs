@@ -139,6 +139,13 @@ impl Gui {
                     TabItem::new(im_str!("Misc")).build(ui, || {
                         ui.checkbox(im_str!("No Recoil"), &mut cfg.no_recoil_enabled);
                     })
+                    });
+                    TabItem::new(im_str!("Config")).build(ui, || {
+                        if ui.button(im_str!("Save")) {
+                            CONFIG.save();
+                        }
+                        }
+                    });
                 })
             });
     }
