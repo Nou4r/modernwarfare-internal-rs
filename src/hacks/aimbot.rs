@@ -9,7 +9,7 @@ use crate::gamedata::Gamedata;
 use crate::math;
 use crate::math::Vector3;
 use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
-use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone};
+use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone, Weapon};
 use enigo::MouseControllable;
 
 pub struct AimbotConfig {
@@ -122,8 +122,11 @@ fn get_aim_position(player: &Player, gamedata: &Gamedata, config: &AimbotConfig,
         .collect::<VecDeque<_>>();
     let target = Target::from_location_history(&player.origin, &player_history);
 
-    let weapon = &gamedata.local_player().weapon;
-    let projectile = Projectile{velocity: m_to_units(weapon.velocity), gravity: m_to_units(9.8), source_pos: gamedata.camera_pos};
+    let projectile = Projectile{
+        velocity: m_to_units(unsafe { Weapon::from_index(gamedata.local_player().weapon_index) }.map(|n| n.velocity).unwrap_or(800.0)),
+        gravity: m_to_units(9.8),
+        source_pos: gamedata.camera_pos
+    };
     // let projectile = Projectile { velocity: 4000.0, gravity: m_to_units(9.8), source_pos: gamedata.camera_pos };
 
     let pred_pos = run_prediction(&target, &projectile);

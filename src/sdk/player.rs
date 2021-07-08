@@ -15,7 +15,8 @@ pub struct Player {
     pub health: i32,
     pub base_address: u64,
     pub visible: bool,
-    pub weapon: Weapon,
+    pub weapon_index: usize,
+    // pub weapon: Weapon,
     pub bones: HashMap<Bone, Vector3>
 }
 
@@ -65,10 +66,10 @@ impl Player {
         let health = name_struct.health;
 
         let weapon_index = read_memory(base_address + player::WEAPON_INDEX);
-        let weapon = Weapon::from_index(weapon_index).unwrap_or_else(|| {
-            error!("Could not get Weapon index {} for player {}", weapon_index, name);
-            Weapon::from_index(0).unwrap()
-        });
+        // let weapon = Weapon::from_index(weapon_index).unwrap_or_else(|| {
+        //     error!("Could not get Weapon index {} for player {}", weapon_index, name);
+        //     Weapon::from_index(0).unwrap()
+        // });
 
         let bones = crate::sdk::get_bone_matrix(index)
             .unwrap_or_else(HashMap::new)
@@ -85,7 +86,8 @@ impl Player {
             stance,
             health,
             base_address,
-            weapon,
+            // weapon,
+            weapon_index,
             bones,
             visible: true,
         })

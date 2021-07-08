@@ -21,10 +21,10 @@ impl Weapon {
             return None;
         }
 
-        let internal_name = str_from_ptr((weapon_defs + 0x0) as _).unwrap_or("");
-        // let internal_name = "";
+        // let internal_name = str_from_ptr((weapon_defs + 0x0) as _).unwrap_or("");
         // let name_2 = str_from_ptr((weapon_defs + 0x18) as _)?;
         // let name = str_from_ptr((weapon_defs + 0x250) as _)?;
+        let internal_name = "";
         let name_2 = "";
         let name = "";
 
