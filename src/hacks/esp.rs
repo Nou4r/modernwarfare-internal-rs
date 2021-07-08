@@ -5,10 +5,10 @@ use rand::{RngCore, SeedableRng};
 
 use crate::config::Config;
 use crate::fonts::Font;
-use crate::gamedata::Gamedata;
-use crate::math::Vector2;
+use crate::gamedata::{Gamedata, GAMEDATA};
+use crate::math::{Vector2, Vector3};
 use crate::overlay::{ImguiOverlay, TextOptions, TextStyle};
-use crate::sdk::{Player, Stance, units_to_m};
+use crate::sdk::{Player, Stance, units_to_m, Bone};
 use crate::util::hsv_to_rgb;
 
 pub struct EspConfig {
@@ -22,6 +22,9 @@ pub struct EspConfig {
 
     pub border_enabled: bool,
     pub border_color: [f32; 4],
+
+    pub skeleton_enabled: bool,
+    pub skeleton_color: [f32; 4],
 
     pub name_enabled: bool,
     pub name_color: [f32; 4],
@@ -41,6 +44,8 @@ impl Default for EspConfig {
             box_color: ImColor32::WHITE.into(),
             border_enabled: true,
             border_color: [0.0, 0.0, 0.0, 0.75],
+            skeleton_enabled: true,
+            skeleton_color: [1.0, 1.0, 1.0, 1.0],
             name_enabled: true,
             name_color: ImColor32::WHITE.into(),
             distance_enabled: true,
@@ -114,6 +119,11 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
         );
     }
 
+    // Draw skeleton
+    if config.esp.skeleton_enabled {
+        draw_skeleton(overlay, player, config);
+    }
+
     // Draw health bar
     if config.esp.health_bar_enabled {
         let health_color = hsv_to_rgb((player.health as f32 / 127.0) * 120.0, 45.0, 100.0);
@@ -164,6 +174,39 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
             _ => {}
         }
     }
+
+    Some(())
+}
+
+macro_rules! unwrap_or_continue {
+    ( $e:expr ) => {
+        match $e {
+            Some(x) => x,
+            None => continue,
+        }
+    };
+}
+
+pub fn draw_skeleton(overlay: &ImguiOverlay, player: &Player, config: &Config) -> Option<()> {
+    for (bone1, bone2) in crate::sdk::BONE_CONNECTIONS {
+        let bone1_pos = *unwrap_or_continue!(player.bones.get(bone1));
+        let bone2_pos = *unwrap_or_continue!(player.bones.get(bone2));
+
+        let bone1_screen_pos = unwrap_or_continue!(GAMEDATA.world_to_screen(bone1_pos));
+        let bone2_screen_pos = unwrap_or_continue!(GAMEDATA.world_to_screen(bone2_pos));
+
+        overlay.draw_list().add_line(bone1_screen_pos.into(), bone2_screen_pos.into(), config.esp.skeleton_color).build();
+    }
+
+    let trans = Vector3 { x: 0.0, y: 0.0, z: 4.0 };
+
+    let head1_pos = *player.bones.get(&Bone::Head)?;
+    let head2_pos = head1_pos + trans;
+
+    let head1_screen_pos = GAMEDATA.world_to_screen(head1_pos)?;
+    let head2_screen_pos = GAMEDATA.world_to_screen(head2_pos)?;
+
+    overlay.draw_list().add_line(head1_screen_pos.into(), head2_screen_pos.into(), config.esp.skeleton_color).build();
 
     Some(())
 }

@@ -75,6 +75,14 @@ impl Gui {
                             ui.same_line();
                             ColorEdit::new(im_str!("Box Border Color"), &mut cfg.esp.border_color).flags(color_edit_flags).build(ui);
 
+                            if !cfg.esp.box_enabled {
+                                cfg.esp.border_enabled = false;
+                            }
+
+                            ui.checkbox(im_str!("Skeleton"), &mut cfg.esp.skeleton_enabled);
+                            ui.same_line();
+                            ColorEdit::new(im_str!("Skeleton Color"), &mut cfg.esp.skeleton_color).flags(color_edit_flags).build(ui);
+
                             ui.checkbox(im_str!("Name"), &mut cfg.esp.name_enabled);
                             ui.same_line();
                             ColorEdit::new(im_str!("Name Color"), &mut cfg.esp.name_color).flags(color_edit_flags).build(ui);
@@ -162,6 +170,10 @@ impl Gui {
 
                 if DECRYPTION.client_info.is_some() {
                     debug!(sdk::local_index());
+                }
+
+                if DECRYPTION.bone_base.is_some() {
+                    debug!(sdk::get_bone_matrix(sdk::local_index()));
                 }
 
                 debug!(CHEAT.keys_down);

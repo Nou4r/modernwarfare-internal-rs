@@ -27,6 +27,8 @@ pub static DECRYPTION: Global<Decryption> = Global::new();
 extern "C" {
     fn decrypt_client_info(image_base: u64, peb: u64) -> u64;
     fn decrypt_client_base(client_info: u64, image_base: u64, peb: u64) -> u64;
+    fn decrypt_bone_base(image_base: u64, peb: u64) -> u64;
+    fn get_bone_index(index: u32, image_base: u64) -> u64;
 }
 
 impl Decryption {
@@ -34,7 +36,7 @@ impl Decryption {
         if self.last_update.elapsed() < Duration::from_secs(1) {
             return;
         }
-        if self.valid() && sdk::get_camera().is_some() {
+        if self.valid() && self.valid_bone() && sdk::get_camera().is_some() {
             // We already have valid so we don't need to update again
             return;
         }
@@ -61,6 +63,23 @@ impl Decryption {
             return;
         }
         self.client_base = Some(client_base);
+
+        let bone_base = decrypt_bone_base(MEMORY.image_base, MEMORY.peb);
+        if bone_base == 0 {
+            log::warn!("bone_base was zero");
+            self.bone_base = None;
+            return;
+        }
+        if is_bad_ptr(bone_base) {
+            log::error!("Read invalid bone_base: {:#X}", bone_base);
+            self.bone_base = None;
+            return;
+        }
+        self.bone_base = Some(bone_base);
+    }
+
+    pub unsafe fn bone_index(index: u32) -> u64 {
+        get_bone_index(index, MEMORY.image_base)
     }
 
     pub fn valid(&self) -> bool {

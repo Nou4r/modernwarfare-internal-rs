@@ -2,6 +2,7 @@ use crate::sdk::*;
 use crate::math::Vector3;
 use crate::util::{try_read_memory, read_memory, is_bad_ptr, str_from_ptr};
 use log::*;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct Player {
@@ -15,6 +16,7 @@ pub struct Player {
     pub base_address: u64,
     pub visible: bool,
     pub weapon: Weapon,
+    pub bones: HashMap<Bone, Vector3>
 }
 
 impl Player {
@@ -68,6 +70,12 @@ impl Player {
             Weapon::from_index(0).unwrap()
         });
 
+        let bones = crate::sdk::get_bone_matrix(index)
+            .unwrap_or_else(HashMap::new)
+            .into_iter()
+            .filter(|(_, pos)| (origin - pos).length() < m_to_units(3.0))
+            .collect();
+
         Some(Self {
             origin,
             id: index,
@@ -78,6 +86,7 @@ impl Player {
             health,
             base_address,
             weapon,
+            bones,
             visible: true,
         })
     }

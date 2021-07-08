@@ -2,11 +2,13 @@ mod client;
 mod structs;
 mod player;
 mod weapon;
+mod bone;
 
 pub use client::*;
 pub use structs::*;
 pub use player::*;
 pub use weapon::*;
+pub use bone::*;
 
 use crate::offsets;
 

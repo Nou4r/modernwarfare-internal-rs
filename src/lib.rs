@@ -60,7 +60,7 @@ pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
 
 #[no_mangle]
 pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
-    if let Err(e) = std::panic::catch_unwind(|| {
+    // if let Err(e) = std::panic::catch_unwind(|| {
         let start = Instant::now();
 
         static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
@@ -76,9 +76,9 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         GUI.get_mut().render(&ui);
 
         CHEAT.get_mut().last_frame_time = start.elapsed();
-    }) {
-        error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
-    }
+    // }) {
+    //     error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
+    // }
 }
 
 #[repr(i32)]

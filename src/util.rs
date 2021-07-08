@@ -1,10 +1,12 @@
 use std::{mem, ptr};
 use std::cell::UnsafeCell;
 use std::collections::{HashMap, HashSet};
+use std::ffi::CStr;
 use std::ops::{Deref, DerefMut};
 
+use imgui::*;
 use log::*;
-use std::ffi::CStr;
+use winapi::um::winuser::VK_ESCAPE;
 
 extern "C" {
     pub fn is_bad_ptr(ptr: u64) -> bool;
@@ -55,9 +57,6 @@ impl RenderState {
     }
 }
 
-use imgui::*;
-use winapi::um::winuser::VK_ESCAPE;
-
 enum KeybindSelectState {
     Idle,
     Listening(HashSet<i32>),
@@ -80,7 +79,7 @@ pub fn keybind_select(ui: &imgui::Ui, render_state: &mut RenderState, title: &Im
         }
     }
     if let Listening(prev_keys_down) = state {
-        unsafe { (*imgui::sys::igGetIO()).WantCaptureKeyboard = true};
+        unsafe { (*imgui::sys::igGetIO()).WantCaptureKeyboard = true };
         let mut handled = false;
         for current_key in &crate::CHEAT.keys_down {
             if !prev_keys_down.contains(&current_key) {
@@ -228,6 +227,18 @@ impl<T: 'static> Global<T> {
         unsafe { (*self.0.get()).as_ref().unwrap() }
     }
 
+    pub fn get_or_init(&self, init: impl Fn() -> T) -> &T {
+        unsafe {
+            match *self.0.get().as_ref().unwrap() {
+                None => {
+                    *self.0.get() = Some(init());
+                    self.get()
+                }
+                Some(_) => self.get()
+            }
+        }
+    }
+
     pub unsafe fn get_mut(&self) -> &mut T {
         unsafe { (*self.0.get()).as_mut().unwrap() }
     }
@@ -264,6 +275,7 @@ pub unsafe fn __readgsqword(Offset: u64) -> u64 {
     );
     out
 }
+
 pub fn hsv_to_rgb(h: f32, mut s: f32, mut v: f32) -> [f32; 3] {
     s /= 100.0;
     v /= 100.0;
@@ -312,5 +324,5 @@ pub fn hsv_to_rgb(h: f32, mut s: f32, mut v: f32) -> [f32; 3] {
         _ => {}
     }
 
-    [r, g ,b]
+    [r, g, b]
 }
