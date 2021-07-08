@@ -64,7 +64,7 @@ pub fn render(gamedata: &Gamedata, overlay: &ImguiOverlay, config: &Config) {
     // Filter out players we don't want
     let mut players: Vec<_> = gamedata.players.iter()
         .filter(|p| !p.is_local())
-        .filter(|p| config.esp.show_teammates || !p.is_enemy())
+        .filter(|p| config.esp.show_teammates || p.is_enemy())
         .filter(|p| {
             let distance = units_to_m((gamedata.local_player().origin - p.origin).length());
             distance < config.esp.max_distance
