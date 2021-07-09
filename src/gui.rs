@@ -183,6 +183,8 @@ impl Gui {
                 ui.text(im_str!("\n"));
 
                 debug!(sdk::get_camera().is_some());
+                debug!(sdk::get_camera().map(|c| c.0));
+                debug!(sdk::get_camera().map(|c| c.1));
                 debug!(sdk::gamemode());
 
                 let refdef = sdk::get_refdef();

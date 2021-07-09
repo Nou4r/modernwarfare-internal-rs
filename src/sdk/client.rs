@@ -52,7 +52,7 @@ pub unsafe fn get_name_struct(player_index: u32) -> Option<&'static NameInfo> {
 }
 
 pub unsafe fn in_game() -> bool {
-    gamemode() != 0
+    gamemode() > 1
 }
 
 pub unsafe fn local_index() -> u32 {

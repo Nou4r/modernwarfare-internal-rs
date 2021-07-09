@@ -54,6 +54,10 @@ impl ImguiOverlay<'_, '_> {
     pub fn draw_text(&self, origin: impl Into<[f32; 2]>, text: &str, options: TextOptions) {
         let mut origin = origin.into();
 
+        if std::str::from_utf8(text.as_bytes()).is_err() {
+            return;
+        }
+
         let font = *FONTS.get().get(&options.font).unwrap();
 
         let font_token = self.ui.push_font(font);
