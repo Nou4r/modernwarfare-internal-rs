@@ -56,6 +56,7 @@ pub unsafe extern "C" fn on_load() {
     CHEAT.init_default();
     config::init();
     FUNCS.init_default();
+    let _ = std::panic::take_hook();
     std::panic::set_hook(Box::new(|info| {
         let backtrace = Backtrace::new();
         error!("panic: {:?}\n{:?}", info, backtrace);

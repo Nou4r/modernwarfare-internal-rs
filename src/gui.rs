@@ -1,4 +1,5 @@
 use imgui::*;
+use winapi::um::processthreadsapi::CreateThread;
 
 use crate::{offsets, sdk};
 use crate::cheat::CHEAT;
@@ -204,6 +205,22 @@ impl Gui {
 
                 if DECRYPTION.bone_base.is_some() {
                     // debug!(sdk::get_bone_matrix(sdk::local_index()));
+                }
+
+                if ui.button(im_str!("level 1000")) {
+                    log::debug!("start");
+                    let result = crate::hacks::unlocker::GiveLevel1000();
+                    log::debug!("result = {}", result);
+                }
+                if ui.button(im_str!("dark matter")) {
+                    std::thread::spawn(|| unsafe {
+                        crate::hacks::unlocker::UnlockDarkMatter();
+                    });
+                }
+                if ui.button(im_str!("Max weapons")) {
+                    std::thread::spawn(|| unsafe {
+                        crate::hacks::unlocker::MaxAllWeapons();
+                    });
                 }
 
                 debug!(CHEAT.keys_down);
