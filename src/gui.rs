@@ -1,14 +1,14 @@
 use imgui::*;
 
+use crate::{offsets, sdk};
 use crate::cheat::CHEAT;
 use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
+use crate::fonts::FONTS;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
-use crate::{sdk, offsets};
-use crate::util::{Global, RenderState, try_read_memory, keybind_select, read_memory};
-use crate::fonts::FONTS;
 use crate::sdk::Bone;
+use crate::util::{Global, keybind_select, read_memory, RenderState, try_read_memory};
 
 pub static GUI: Global<Gui> = Global::new();
 
@@ -113,7 +113,7 @@ impl Gui {
                                     ui,
                                     &mut bone_index,
                                     &bone_items,
-                                    &|b| im_str!("{:?}", b).into()
+                                    &|b| im_str!("{:?}", b).into(),
                                 );
                                 cfg.aimbot.bone = bone_items[bone_index];
 
@@ -138,12 +138,10 @@ impl Gui {
                         });
                     TabItem::new(im_str!("Misc")).build(ui, || {
                         ui.checkbox(im_str!("No Recoil"), &mut cfg.no_recoil_enabled);
-                    })
                     });
                     TabItem::new(im_str!("Config")).build(ui, || {
                         if ui.button(im_str!("Save")) {
                             CONFIG.save();
-                        }
                         }
                     });
                 })
