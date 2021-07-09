@@ -20,6 +20,8 @@ use crate::memory::MEMORY;
 use crate::overlay::ImguiOverlay;
 use std::fmt::Debug;
 use std::panic::PanicInfo;
+use backtrace::Backtrace;
+use crate::funcs::FUNCS;
 
 pub mod cheat;
 pub mod gui;
@@ -37,6 +39,7 @@ pub mod config;
 pub mod fonts;
 pub mod prediction;
 pub mod asm;
+pub mod funcs;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
@@ -52,6 +55,11 @@ pub unsafe extern "C" fn on_load() {
     DECRYPTION.init_default();
     CHEAT.init_default();
     config::init();
+    FUNCS.init_default();
+    std::panic::set_hook(Box::new(|info| {
+        let backtrace = Backtrace::new();
+        error!("panic: {:?}\n{:?}", info, backtrace);
+    }))
 }
 
 #[no_mangle]
@@ -80,7 +88,8 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
 
         CHEAT.get_mut().last_frame_time = start.elapsed();
     }) {
-        error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
+        // error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
+        unload_cheat();
     }
 }
 

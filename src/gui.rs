@@ -1,14 +1,15 @@
 use imgui::*;
 
+use crate::{offsets, sdk};
 use crate::cheat::CHEAT;
 use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
+use crate::fonts::FONTS;
+use crate::funcs::FUNCS;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
-use crate::{sdk, offsets};
-use crate::util::{Global, RenderState, try_read_memory, keybind_select, read_memory};
-use crate::fonts::FONTS;
 use crate::sdk::Bone;
+use crate::util::{Global, keybind_select, read_memory, RenderState, try_read_memory};
 
 pub static GUI: Global<Gui> = Global::new();
 
@@ -117,7 +118,7 @@ impl Gui {
                                     ui,
                                     &mut bone_index,
                                     &bone_items,
-                                    &|b| im_str!("{:?}", b).into()
+                                    &|b| im_str!("{:?}", b).into(),
                                 );
                                 cfg.aimbot.bone = bone_items[bone_index];
 
@@ -187,7 +188,8 @@ impl Gui {
                 debug_hex!(DECRYPTION.bone_base.unwrap_or(0));
                 ui.text(im_str!("\n"));
 
-                debug!(sdk::get_camera().is_some());
+                debug!(sdk::get_camera().map(|c| c.0));
+                debug!(sdk::get_camera().map(|c| c.1));
                 debug!(sdk::gamemode());
 
                 let refdef = sdk::get_refdef();
