@@ -2,6 +2,7 @@
 #![feature(destructuring_assignment)]
 #![feature(maybe_uninit_ref)]
 #![feature(type_name_of_val)]
+#![feature(asm)]
 #![allow(clippy::missing_safety_doc)]
 
 use std::ptr::null_mut;
@@ -35,6 +36,7 @@ pub mod hacks;
 pub mod config;
 pub mod fonts;
 pub mod prediction;
+pub mod asm;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
@@ -49,7 +51,7 @@ pub unsafe extern "C" fn on_load() {
     GAMEDATA.init_default();
     DECRYPTION.init_default();
     CHEAT.init_default();
-    CONFIG.init_default();
+    config::init();
 }
 
 #[no_mangle]
@@ -61,7 +63,7 @@ pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
 
 #[no_mangle]
 pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
-    // if let Err(e) = std::panic::catch_unwind(|| {
+    if let Err(e) = std::panic::catch_unwind(|| {
         let start = Instant::now();
 
         static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
@@ -77,9 +79,9 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         GUI.get_mut().render(&ui);
 
         CHEAT.get_mut().last_frame_time = start.elapsed();
-    // }) {
-    //     error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
-    // }
+    }) {
+        error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
+    }
 }
 
 #[repr(i32)]

@@ -7,9 +7,10 @@ use crate::math::Vector3;
 use crate::memory::MEMORY;
 use crate::offsets::bone;
 use crate::util::{Global, read_memory};
+use serde::{Serialize, Deserialize};
 
 #[repr(u32)]
-#[derive(PartialEq, Debug, Clone, Copy, Hash, Eq)]
+#[derive(PartialEq, Debug, Clone, Copy, Hash, Eq, Serialize, Deserialize)]
 pub enum Bone {
     Head = 7,
     Neck = 6,

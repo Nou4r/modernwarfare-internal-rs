@@ -10,7 +10,9 @@ use crate::math::{Vector2, Vector3};
 use crate::overlay::{ImguiOverlay, TextOptions, TextStyle};
 use crate::sdk::{Player, Stance, units_to_m, Bone};
 use crate::util::hsv_to_rgb;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct EspConfig {
     pub enabled: bool,
     pub max_distance: f32,
