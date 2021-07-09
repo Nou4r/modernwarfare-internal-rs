@@ -25,3 +25,8 @@ pub mod bone {
     pub const BASE_POS: u64 = 0x95434;
     pub const INDEX_STRUCT_SIZE: u64 = 0x150;
 }
+
+pub mod funcs {
+    pub const DVAR_SETBOOL: u64 = 0x2F64420;
+    pub const DVAR_UAV: u64 = 0x144E0EE8;
+}
