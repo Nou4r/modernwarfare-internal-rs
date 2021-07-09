@@ -1,7 +1,6 @@
 use std::collections::VecDeque;
 use std::iter::FromIterator;
 
-use serde::{Deserialize, Serialize};
 use winapi::um::winuser::VK_XBUTTON1;
 
 use crate::cheat::CHEAT;
@@ -10,9 +9,11 @@ use crate::gamedata::Gamedata;
 use crate::math;
 use crate::math::Vector3;
 use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
-use crate::sdk::{Bone, m_to_units, Player, Stance, units_to_m, Weapon};
-use crate::util::move_mouse_relative;
+use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone, Weapon};
+use enigo::MouseControllable;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct AimbotConfig {
     pub enabled: bool,
     pub aim_at_teammates: bool,
@@ -29,7 +30,7 @@ pub struct AimbotConfig {
 impl Default for AimbotConfig {
     fn default() -> Self {
         Self {
-            enabled: false,
+            enabled: true,
             aim_at_teammates: false,
             bone: Bone::Head,
             max_distance: 400.0,
@@ -67,7 +68,7 @@ pub fn tick(gamedata: &Gamedata, config: &Config, ctx: &mut AimbotContext) {
     aim_at(gamedata, target_pos, &config.aimbot, ctx);
 }
 
-fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig, ctx: &mut AimbotContext) {
+fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut AimbotContext) {
     let absolute_delta = math::calculate_relative_angles(&gamedata.camera_pos, &target, &gamedata.camera_angles);
 
     // info!("Aiming at {}\t({}m)\t({}°)\t({})\t({:?})",
@@ -111,8 +112,7 @@ fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig, ctx: &mut
     ctx.mouse_accum.0 -= dx as f32;
     ctx.mouse_accum.1 -= dy as f32;
 
-    let status = unsafe { move_mouse_relative(dx, dy) };
-    log::info!("status = {:#X}", status);
+    enigo::Enigo::new().mouse_move_relative(dx, dy);
 }
 
 /// Gets the position to aim at given a player.
@@ -124,10 +124,10 @@ fn get_aim_position(player: &Player, gamedata: &Gamedata, config: &AimbotConfig,
         .collect::<VecDeque<_>>();
     let target = Target::from_location_history(&player.origin, &player_history);
 
-    let projectile = Projectile {
+    let projectile = Projectile{
         velocity: m_to_units(unsafe { Weapon::from_index(gamedata.local_player().weapon_index) }.map(|n| n.velocity).unwrap_or(800.0)),
         gravity: m_to_units(9.8),
-        source_pos: gamedata.camera_pos,
+        source_pos: gamedata.camera_pos
     };
     // let projectile = Projectile { velocity: 4000.0, gravity: m_to_units(9.8), source_pos: gamedata.camera_pos };
 

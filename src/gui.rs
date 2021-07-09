@@ -5,6 +5,7 @@ use crate::cheat::CHEAT;
 use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
 use crate::fonts::FONTS;
+use crate::funcs::FUNCS;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
 use crate::sdk::Bone;
@@ -87,6 +88,10 @@ impl Gui {
                             ui.same_line();
                             ColorEdit::new(im_str!("Name Color"), &mut cfg.esp.name_color).flags(color_edit_flags).build(ui);
 
+                            ui.checkbox(im_str!("Snapline"), &mut cfg.esp.snapline_enabled);
+                            ui.same_line();
+                            ColorEdit::new(im_str!("Snapline Color"), &mut cfg.esp.snapline_color).flags(color_edit_flags).build(ui);
+
                             ui.next_column();
                             ui.checkbox(im_str!("Show Teammates"), &mut cfg.esp.show_teammates);
                             ui.checkbox(im_str!("Align"), &mut cfg.esp.align);
@@ -143,6 +148,9 @@ impl Gui {
                         if ui.button(im_str!("Save")) {
                             CONFIG.save();
                         }
+                        if ui.button(im_str!("Unload")) {
+                            unsafe { crate::unload_cheat(); }
+                        }
                     });
                 })
             });
@@ -180,7 +188,6 @@ impl Gui {
                 debug_hex!(DECRYPTION.bone_base.unwrap_or(0));
                 ui.text(im_str!("\n"));
 
-                debug!(sdk::get_camera().is_some());
                 debug!(sdk::get_camera().map(|c| c.0));
                 debug!(sdk::get_camera().map(|c| c.1));
                 debug!(sdk::gamemode());
@@ -197,6 +204,10 @@ impl Gui {
 
                 if DECRYPTION.bone_base.is_some() {
                     // debug!(sdk::get_bone_matrix(sdk::local_index()));
+                }
+
+                if ui.button(im_str!("decrypt client active")) {
+                    crate::asm::decrypt_clientactive(1);
                 }
 
                 debug!(CHEAT.keys_down);
