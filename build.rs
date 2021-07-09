@@ -8,6 +8,10 @@ fn main() {
     println!("cargo:rustc-link-search=native={}", dst.display());
     println!("cargo:rustc-link-lib=static=framework");
 
+    cc::Build::new()
+        .file("framework/src/syscall.asm")
+        .compile("syscall");
+
     // Include build ID
     let output = Command::new("git").args(&["log", "--pretty=format:%h", "-n", "1"]).output().unwrap();
     let git_hash = String::from_utf8(output.stdout).unwrap().replace("\"", "");

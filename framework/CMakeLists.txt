@@ -14,6 +14,6 @@ include_directories(
         ../imgui
 )
 
-add_library(framework STATIC ${SOURCES} ../imgui/imgui_impl_win32.cpp ../imgui/imgui_impl_dx12.cpp src/Gui.cpp src/Gui.h)
+add_library(framework STATIC ${SOURCES} ../imgui/imgui_impl_win32.cpp ../imgui/imgui_impl_dx12.cpp)
 
 install(TARGETS framework DESTINATION .)

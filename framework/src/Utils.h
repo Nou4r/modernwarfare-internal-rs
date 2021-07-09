@@ -16,14 +16,6 @@ namespace utils
 
     extern "C" bool is_bad_ptr(std::uintptr_t p);
 
-    int random_int(int, int);
-
-    int find_string(const std::string &, const std::string &&);
-
-    std::string base64_decode(const std::string &);
-
-    std::string base64_encode(const std::string &);
-
     constexpr auto deg2rad(float degrees) noexcept
     { return degrees * (std::numbers::pi_v<float> / 180.0f); }
 

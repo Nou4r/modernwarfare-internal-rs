@@ -265,15 +265,19 @@ impl<T: Default + 'static> DerefMut for Global<T> {
 }
 
 #[inline]
-pub unsafe fn __readgsqword(Offset: u64) -> u64 {
+pub unsafe fn __readgsqword(offset: u64) -> u64 {
     let out: u64;
     llvm_asm!("mov $0, gs:[$1]"
     : "=r"(out)
-    : "ri"(Offset)
+    : "ri"(offset)
     :
     : "intel"
     );
     out
+}
+
+extern "C" {
+    pub fn move_mouse_relative(dx: i32, dy: i32) -> u32;
 }
 
 pub fn hsv_to_rgb(h: f32, mut s: f32, mut v: f32) -> [f32; 3] {

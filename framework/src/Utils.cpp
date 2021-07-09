@@ -57,88 +57,6 @@ uint8_t* utils::find_pattern(const char* signature, const char* module_name)
 }
 
 
-int utils::random_int(const int min, const int max)
-{
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    const std::uniform_int_distribution<int> uni(min, max);
-
-    return static_cast<int>(uni(rng));
-}
-
-template<typename charT>
-struct my_equal
-{
-    explicit my_equal(const std::locale& loc) : loc_(loc)
-    {
-    }
-
-    bool operator()(charT ch1, charT ch2)
-    {
-        return std::toupper(ch1) == std::toupper(ch2);
-    }
-
-private:
-    const std::locale& loc_;
-};
-
-int utils::find_string(const std::string& str1, const std::string&& str2)
-{
-    const auto loc = std::locale();
-
-    if (const auto it = std::ranges::search(str1, str2, my_equal<std::string::value_type>(loc)).begin(); it !=
-                                                                                                         str1.end())
-        return it - str1.begin();
-
-    return -1;
-}
-
-std::string utils::base64_decode(const std::string& encoded_string)
-{
-    const std::string base64_chars =
-            _("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              "abcdefghijklmnopqrstuvwxyz"
-              "0123456789+/");
-
-    std::string out;
-    std::vector<int> T(256, -1);
-    for (auto i = 0u; i < 64; i++) T[base64_chars[i]] = i;
-
-    auto valb = -8;
-    for (auto val = 0; unsigned char c : encoded_string) {
-        if (T[c] == -1) break;
-        val = (val << 6) + T[c];
-        valb += 6;
-        if (valb >= 0) {
-            out.push_back(static_cast<char>(val >> valb & 0xFF));
-            valb -= 8;
-        }
-    }
-
-    return out;
-}
-
-std::string utils::base64_encode(const std::string& decoded_string)
-{
-    std::string out;
-
-    auto val = 0, valb = -6;
-    for (auto c : decoded_string) {
-        val = (val << 8) + c;
-        valb += 8;
-        while (valb >= 0) {
-            out.push_back(_("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")[val >> valb & 0x3F]);
-            valb -= 6;
-        }
-    }
-    if (valb > -6)
-        out.push_back(
-                _("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")[val << 8 >> valb + 8 & 0x3F]);
-    while (out.size() % 4) out.push_back('=');
-
-    return out;
-}
-
 //#define DEBUG_READ
 
 #ifndef DEBUG_READ
@@ -167,3 +85,29 @@ bool utils::is_bad_ptr(std::uintptr_t p)
 }
 
 #endif
+
+#include "syscall.h"
+
+extern "C" uint32_t move_mouse_relative(int dx, int dy) {
+    INPUT input = {};
+
+    input.type = INPUT_MOUSE;
+    input.mi.dx = dx;
+    input.mi.dy = dy;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE;
+
+    // NtUserSendInput
+    //      "1507": 4228,
+    //      "1511": 4228,
+    //      "1607": 4228,
+    //      "1703": 4226,
+    //      "1709": 4226,
+    //      "1803": 4226,
+    //      "1809": 4226,
+    //      "1903": 4226,
+    //      "1909": 4226,
+    //      "2004": 4223,
+    //      "20H2": 4223
+
+    return do_syscall<ULONG>(4223, 1, &input, sizeof(INPUT));
+}
