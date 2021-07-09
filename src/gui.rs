@@ -206,14 +206,11 @@ impl Gui {
                     // debug!(sdk::get_bone_matrix(sdk::local_index()));
                 }
 
-                if ui.button(im_str!("decrypt client active")) {
-                    crate::asm::decrypt_clientactive(1);
-                }
-
                 debug!(CHEAT.keys_down);
                 debug!(CHEAT.gamedata_history.len());
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
+                    debug!(sdk::Weapon::from_index(GAMEDATA.local_player().weapon_index));
                 }
             });
     }

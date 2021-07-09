@@ -12,6 +12,7 @@ use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
 use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone, Weapon};
 use enigo::MouseControllable;
 use serde::{Serialize, Deserialize};
+use crate::gui::GUI;
 
 #[derive(Serialize, Deserialize)]
 pub struct AimbotConfig {
@@ -55,6 +56,10 @@ pub fn tick(gamedata: &Gamedata, config: &Config, ctx: &mut AimbotContext) {
     }
 
     if !CHEAT.is_key_down(config.aimbot.keybind) {
+        return;
+    }
+
+    if GUI.is_open() {
         return;
     }
 
