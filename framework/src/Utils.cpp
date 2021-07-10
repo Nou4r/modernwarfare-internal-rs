@@ -7,7 +7,7 @@
 #include "imgui.h"
 #include "xorstr.h"
 
-uint8_t* utils::find_pattern(const char* signature, const char* module_name)
+uint8_t* utils::find_pattern(const char* module_name, const char* signature)
 {
     static auto pattern_to_byte = [](const char* pattern) {
         auto bytes = std::vector<int>{};

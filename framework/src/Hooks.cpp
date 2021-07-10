@@ -96,11 +96,13 @@ __declspec(dllexport) LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         }
 
         case WM_XBUTTONDOWN: {
-            on_input_event(static_cast<int32_t>(InputEventType::KeyDown), (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
+            on_input_event(static_cast<int32_t>(InputEventType::KeyDown),
+                           (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
             break;
         }
         case WM_XBUTTONUP: {
-            on_input_event(static_cast<int32_t>(InputEventType::KeyUp), (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
+            on_input_event(static_cast<int32_t>(InputEventType::KeyUp),
+                           (GET_XBUTTON_WPARAM(wParam) == 1) ? VK_XBUTTON1 : VK_XBUTTON2);
             break;
         }
     };
@@ -114,7 +116,7 @@ __declspec(dllexport) LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
     }
     if (io.WantCaptureKeyboard && (
             uMsg == WM_KEYDOWN || uMsg == WM_KEYUP
-            )) {
+    )) {
         return TRUE;
     }
 
@@ -123,15 +125,8 @@ __declspec(dllexport) LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 
 Hooks::Hooks() noexcept
 {
-    // Hook present
-    const auto swapChainBase = *reinterpret_cast<std::uint64_t*>(memory->imageBase + offsets::directx::swap_chain);
-
-    if (swapChainBase == 0) {
-        DEBUG_ERROR("Error installing present hook: swap chain base address was 0");
-        return;
-    }
-
-    originalPresent = Hooks::write((void*) swapChainBase, 8, hkPresent);
+//    this->hookPresent();
+    this->hookDiscord();
 }
 
 void Hooks::hookWndProc() noexcept
@@ -153,3 +148,39 @@ void Hooks::uninstall() const noexcept
     // TODO: Unhook wndproc (maybe not necessary)
     SetWindowLongPtrW(get_process_window(), GWLP_WNDPROC, (LONG_PTR) originalWndProc);
 }
+
+void Hooks::hookPresent() noexcept
+{
+    // Hook present
+    const auto swapChainBase = *reinterpret_cast<std::uint64_t*>(memory->imageBase + offsets::directx::swap_chain);
+
+    if (swapChainBase == 0) {
+        DEBUG_ERROR("Error installing present hook: swap chain base address was 0");
+        return;
+    }
+
+    originalPresent = Hooks::write((void*) swapChainBase, 8, hkPresent);
+}
+
+void Hooks::hookDiscord() noexcept
+{
+    const auto pCallPresentDiscord = utils::find_pattern("DiscordHook64.dll",
+                                                         "41 89 F0 FF 15 ? ? ? ? 89 C6 E8 ? ? ? ?");
+
+    if (!pCallPresentDiscord) {
+        DEBUG_ERROR("Could not find discord present");
+        return;
+    }
+
+    const auto pOriginalPresent = reinterpret_cast< PresentFunction* >( pCallPresentDiscord +
+                                                                        *reinterpret_cast< int32_t* >(pCallPresentDiscord + 0x5 ) + 0x9 );
+
+    if (!*pOriginalPresent) {
+        DEBUG_ERROR("Could not deref discord present");
+        return;
+    }
+
+    originalPresent = *pOriginalPresent;
+    *pOriginalPresent = hkPresent;
+}
+

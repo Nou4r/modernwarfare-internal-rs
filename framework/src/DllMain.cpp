@@ -19,12 +19,7 @@ BOOL APIENTRY DllMain(HMODULE moduleHandle, DWORD reason, LPVOID reserved)
         return TRUE;
     }
 
-#ifdef DEBUG
-//    AllocConsole();
-//    freopen("CONOUT$", "w", stdout);
-#endif
-
-    dbg::info("Loaded");
+//    dbg::info("Loaded");
 
     cheat = std::make_unique<Cheat>(moduleHandle);
 

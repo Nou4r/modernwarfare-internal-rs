@@ -7,17 +7,19 @@
 #include <Windows.h>
 #include <dxgi1_4.h>
 
-using PresentFunction = HRESULT __fastcall(IDXGISwapChain3 *, UINT, UINT);
+using PresentFunction = HRESULT (__fastcall*)(IDXGISwapChain3 *, UINT, UINT);
 
 class Hooks
 {
 public:
     explicit Hooks() noexcept;
     void hookWndProc() noexcept;
+    void hookPresent() noexcept;
+    void hookDiscord() noexcept;
     void uninstall() const noexcept;
 
     WNDPROC originalWndProc{};
-    std::add_pointer_t<PresentFunction> originalPresent;
+    PresentFunction originalPresent;
 private:
     // https://github.com/hailzfn/IGodsEye-Reborn/blob/master/Hook/Hook.h#L43
     template<typename T>

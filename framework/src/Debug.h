@@ -10,7 +10,7 @@
 
 #include "xorstr.h"
 
-#define DEBUG_ERROR(msg) debug::detail::debug_error(std::string(msg) + " (" + _(__FILE__) + ":" + std::to_string(__LINE__) + ")")
+#define DEBUG_ERROR(msg) debug::detail::debug_error(std::string(_(msg)) + " (" + _(__FILE__) + ":" + std::to_string(__LINE__) + ")")
 
 namespace debug::detail
 {

@@ -27,7 +27,7 @@ void Cheat::unload() noexcept
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
 
-    dbg::info("Unloaded");
+//    dbg::info("Unloaded");
 
 //    FreeLibrary(moduleHandle);
 }
