@@ -5,26 +5,29 @@ extern "C" auto decrypt_client_info(uint64_t imageBase, uint64_t peb) -> uint64_
 {
     uint64_t RAX = imageBase, RBX = imageBase, RCX = imageBase, RDX = imageBase, R8 = imageBase, RDI = imageBase, RSI = imageBase, R9 = imageBase, R10 = imageBase, R11 = imageBase, R12 = imageBase, R13 = imageBase, R14 = imageBase, R15 = imageBase;
 
-    RBX = readMemory<uint64_t>(imageBase + 0x17219218);
+    RBX = readMemory<uint64_t>(imageBase + 0x16F6C318);
     if (RBX == 0) {
         return 0;
     }
-    RCX = peb; // mov rcx,gs:[rax]
-    RCX = ~RCX;
-    RDX = 0x6D70CEFD9593A4F9;
-    RAX = 0x0;
-    RAX = _rotl64(RAX, 0x10);
-    RAX ^= readMemory<uint64_t>(imageBase + 0x660310D);
-    RAX = _byteswap_uint64(RAX);
-    RBX *= readMemory<uint64_t>(RAX + 0x17);
+    R8 = imageBase;
+    RAX = 0xB1368AA21CC89905;
+    RBX *= RAX;
+    RDX = 0xE33EDD45F165A542;
+    RBX += R8;
     RAX = RBX;
-    RAX >>= 0x24;
+    RAX >>= 0x18;
     RBX ^= RAX;
-    RAX = 0x3938DE18C6D75C93;
-    RBX *= RDX;
-    RBX += RAX;
-    RBX ^= RCX;
-    RBX ^= R8;
+    RAX = RBX;
+    RCX = 0x0;
+    RAX >>= 0x30;
+    RCX = _rotl64(RCX, 0x10);
+    RAX ^= RBX;
+    RCX ^= readMemory<uint64_t>(imageBase + 0x6358106);
+    RAX += RDX;
+    RCX = ~RCX;
+    R8 += RAX;
+    RBX = readMemory<uint64_t>(RCX + 0xF);
+    RBX *= R8;
     return RBX;
 }
 
@@ -32,50 +35,222 @@ extern "C" auto decrypt_client_base(uint64_t clientInfo, uint64_t imageBase, uin
 {
     uint64_t RAX = imageBase, RBX = imageBase, RCX = imageBase, RDX = imageBase, R8 = imageBase, RDI = imageBase, RSI = imageBase, R9 = imageBase, R10 = imageBase, R11 = imageBase, R12 = imageBase, R13 = imageBase, R14 = imageBase, R15 = imageBase, RBP = 0, RSP = 0;
 
-    RAX = readMemory<uint64_t>(clientInfo + 0x9DBF8);
+    RAX = readMemory<uint64_t>(clientInfo + 0x9DC48);
     RBX = peb; // mov rbx,gs:[rcx]
     // test rax,rax
-    // je 00007FF686F63D55h
+    // je 00007FF65E6C8BB1h
     RCX = RBX;
-    RCX >>= 0xF;
+    RCX = _rotr64(RCX, 0xE);
     RCX &= 0xF;
     // cmp rcx,0Eh
-    // ja 00007FF686F638FBh
+    // ja 00007FF65E6C8742h
     switch (RCX) {
         case 0: {
-            R14 = imageBase + 0x3C431634;
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = 0x2C52EE7E5CA1CE96;
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = 0x2C4DD10573E87BDF;
             RAX -= RCX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RCX = ~RCX;
-            RAX *= readMemory<uint64_t>(RCX + 0x9);
-            RCX = RBX;
-            RCX ^= R14;
-            RAX -= RCX;
-            RAX += RBX;
             RCX = RAX;
-            RCX >>= 0x14;
+            RCX >>= 0xF;
             RAX ^= RCX;
             RCX = RAX;
-            RCX >>= 0x28;
+            RCX >>= 0x1E;
             RAX ^= RCX;
-            RAX += RBX;
-            RCX = 0x9C83A6ED81709013;
+            RCX = RAX;
+            RCX >>= 0x3C;
+            RAX ^= RCX;
+            RCX = 0x2A7E13A63C0DC12;
+            RAX += RCX;
+            RCX = 0x6EA8692AFBE9951D;
             RAX *= RCX;
-            RCX = 0x709DC8ADED0BA319;
+            RCX = imageBase + 0x7B15C6EB;
+            RCX -= RBX;
+            RAX += RCX;
+            RDX = 0x0;
+            RCX = RAX;
+            RDX = _rotl64(RDX, 0x10);
+            RAX = imageBase;
+            RCX -= RAX;
+            RDX ^= R10;
+            RDX = ~RDX;
+            RAX = readMemory<uint64_t>(RDX + 0x9);
+            RAX *= RCX;
+            RCX = imageBase;
             RAX += RCX;
             return RAX;
         }
         case 1: {
-            uint64_t RBP_NEG_0x58 = imageBase;
-            RCX = 0x3CE1F452114BE5D;
-            RBP_NEG_0x58 = RCX; // mov [rbp-58h],rcx
-            R9 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = 0x1A69AD46E3A25C75;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = imageBase + 0x7A646912;
+            RCX = ~RCX;
+            RCX -= RBX;
+            RAX += RCX;
+            RCX = RAX;
+            RCX >>= 0x22;
+            RAX ^= RCX;
+            RCX = 0x7D67E1E97C6B2C96;
             RAX -= RCX;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R9;
+            RCX = ~RCX;
+            RCX = readMemory<uint64_t>(RCX + 0x9);
+            RCX *= RAX;
+            RAX = imageBase;
+            RCX -= RAX;
+            RAX = RBX - 0x0FEA;
+            RAX += RCX;
+            RAX -= RBX;
+            RCX = imageBase + 0x2FF05259;
+            RAX += RCX;
+            RCX = 0x9A1F338590121263;
+            RAX *= RCX;
+            RCX = 0x52BE01F8D7308C;
+            RAX += RCX;
+            return RAX;
+        }
+        case 2: {
+            R14 = imageBase + 0xABC7;
+            R15 = imageBase + 0x329;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = 0x428FFCC799FD807;
+            RAX *= RCX;
+            RCX = imageBase;
+            RAX += RCX;
+            RCX = RBX;
+            RCX = ~RCX;
+            RCX += R15;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x22;
+            RAX ^= RCX;
+            RCX = 0x6D47E789FB157961;
+            RAX *= RCX;
+            RCX = 0x51EE1309C70ABD7;
+            RAX *= RCX;
+            RCX = R14;
+            RCX = ~RCX;
+            RCX ^= RBX;
+            RAX ^= RCX;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R9;
+            RCX = ~RCX;
+            RAX *= readMemory<uint64_t>(RCX + 0x9);
+            return RAX;
+        }
+        case 3: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R15 = imageBase + 0x4154CA52;
+            R14 = imageBase + 0x6B1288FF;
+            RCX = 0x9AA73C5A44CEFEB;
+            RAX *= RCX;
+            RCX = R14;
+            RCX = ~RCX;
+            RCX ^= RBX;
+            RAX -= RCX;
+            RDX = 0x0;
+            RDX = _rotl64(RDX, 0x10);
+            RCX = RBX;
+            RDX ^= R10;
+            RDX = ~RDX;
+            RCX *= R15;
+            RDX = readMemory<uint64_t>(RDX + 0x9);
+            RAX *= RDX;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x23;
+            RAX ^= RCX;
+            RCX = 0x49E1C5A42D1EBB58;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x15;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x2A;
+            RAX ^= RCX;
+            RCX = 0x3736A546ED043ACA;
+            RAX += RCX;
+            return RAX;
+        }
+        case 4: {
+            uint64_t RBP_NEG_0x80 = imageBase;
+            R11 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = 0xB1660B2EB3DEF8A3;
+            RBP_NEG_0x80 = RCX; // mov [rbp-80h],rcx
+            RDX = imageBase + 0xE83F;
+            RCX = RAX;
+            RCX >>= 0x1B;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x36;
+            RAX ^= RCX;
+            RCX = RBX;
+            RCX *= RDX;
+            RAX -= RCX;
+            RCX = 0x310451BB37ED62A0;
+            RAX ^= RCX;
+            R8 = 0x0;
+            R8 = _rotl64(R8, 0x10);
+            RCX = imageBase + 0x7E687D0C;
+            R8 ^= R11;
+            RDX = RBX;
+            RDX = ~RDX;
+            RCX = ~RCX;
+            RDX *= RCX;
+            R8 = ~R8;
+            RDX += RAX;
+            RAX = readMemory<uint64_t>(R8 + 0x9);
+            RAX *= RDX;
+            R8 = imageBase + 0xE166;
+            RAX *= RBP_NEG_0x80; // imul rax,[rbp-80h]
+            RCX = RBX;
+            RCX *= R8;
+            RAX -= RCX;
+            RCX = 0x2D4951DFC2EC76;
+            RAX ^= RCX;
+            return RAX;
+        }
+        case 5: {
+            R14 = imageBase + 0xCE23;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R9;
+            RCX = ~RCX;
+            RAX *= readMemory<uint64_t>(RCX + 0x9);
+            RAX += RBX;
+            RCX = RBX;
+            RCX ^= R14;
+            RAX -= RCX;
+            RAX -= RBX;
+            RAX -= RBX;
+            RCX = RAX;
+            RCX >>= 0xE;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x1C;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x38;
+            RAX ^= RCX;
+            RCX = 0x722B82C72992DE8D;
+            RAX += RCX;
+            RCX = 0x15F1C700407765FB;
+            RAX *= RCX;
+            return RAX;
+        }
+        case 6: {
+            uint64_t RBP_NEG_0x70 = imageBase;
+            R14 = imageBase + 0x34DF;
+            R11 = imageBase + 0x1C28A0E6;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = RBX;
+            RCX *= R14;
+            RAX += RCX;
+            RCX = R11;
+            RCX = ~RCX;
+            RCX ^= RBX;
+            RAX += RCX;
             RCX = RAX;
             RCX >>= 0xC;
             RAX ^= RCX;
@@ -84,74 +259,195 @@ extern "C" auto decrypt_client_base(uint64_t clientInfo, uint64_t imageBase, uin
             RAX ^= RCX;
             RCX = RAX;
             RCX >>= 0x30;
-            RCX ^= RBX;
             RAX ^= RCX;
-            RCX = 0x6ECEBD9C03D02936;
-            RAX -= RCX;
-            RCX = imageBase;
+            RCX = 0xDE4968A1A719FFCB;
+            RAX *= RCX;
+            RCX = RBX;
+            RCX = ~RCX;
+            RCX -= RBP_NEG_0x70; // sub rcx,[rbp-70h]
             RAX += RCX;
+            RCX = 0xB556BEEBB66DDC7F;
+            RAX *= RCX;
+            RCX = 0x4D76CF5D1934D528;
+            RAX -= RCX;
             RCX = 0x0;
             RCX = _rotl64(RCX, 0x10);
             RCX ^= R9;
             RCX = ~RCX;
             RCX = readMemory<uint64_t>(RCX + 0x9);
-            RCX *= RBP_NEG_0x58; // imul rcx,[rbp-58h]
             RAX *= RCX;
-            RAX += RBX;
+            RCX = 0x56851AD3B48647AD;
+            RAX -= RCX;
             return RAX;
         }
-        case 2: {
-            R11 = imageBase + 0xAE07;
-            RDX = readMemory<uint64_t>(imageBase + 0x6603146);
-            RAX += RBX;
+        case 7: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R15 = imageBase + 0x39C4;
             RCX = RAX;
-            RCX >>= 0x13;
+            RCX >>= 0x16;
             RAX ^= RCX;
             RCX = RAX;
-            RCX >>= 0x26;
+            RCX >>= 0x2C;
             RAX ^= RCX;
-            RCX = 0x337FEE03C131D861;
-            RAX ^= RCX;
-            RCX = 0xBCA9BFAF51DA6757;
-            RAX *= RCX;
-            RCX = 0x5434E82D28CC28F9;
-            RAX -= RCX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= RDX;
-            RCX = ~RCX;
-            RAX *= readMemory<uint64_t>(RCX + 0x9);
             RCX = imageBase;
             RAX -= RCX;
-            RAX += 0xFFFFFFFFE2253F2C;
-            RAX += RBX;
-            RCX = R11;
-            RCX = ~RCX;
-            RCX += RBX;
+            RCX = RAX;
+            RCX >>= 0xF;
             RAX ^= RCX;
-            return RAX;
-        }
-        case 3: {
-            uint64_t RSP_0x68 = imageBase;
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = 0x8035B07E6320667D;
-            R15 = imageBase + 0x576A2168;
-            RSP_0x68 = RCX; // mov [rsp+68h],rcx
+            RCX = RAX;
+            RCX >>= 0x1E;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x3C;
+            RAX ^= RCX;
+            RCX = 0x21FED6E262CAF0A5;
+            RAX += RBX;
+            RAX *= RCX;
+            RCX = 0xC7C713F9414B5D6F;
+            RAX *= RCX;
+            RCX = RBX;
+            RCX *= R15;
+            RAX -= RCX;
             RCX = 0x0;
             RCX = _rotl64(RCX, 0x10);
             RCX ^= R10;
             RCX = ~RCX;
-            RCX = readMemory<uint64_t>(RCX + 0x9);
-            RCX *= RSP_0x68; // imul rcx,[rsp+68h]
+            RAX *= readMemory<uint64_t>(RCX + 0x9);
+            return RAX;
+        }
+        case 8: {
+            R11 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = RAX;
+            RCX >>= 0x1E;
+            RAX ^= RCX;
+            RDX = RAX;
+            RDX >>= 0x3C;
+            RDX ^= RAX;
+            RCX = imageBase + 0x4761EFFA;
+            RAX = RBX;
+            RAX = ~RAX;
+            RAX += RDX;
+            RAX += RCX;
+            RDX = imageBase + 0x4D99E6C7;
+            RCX = 0x146DB59CC1529DFB;
+            RAX *= RCX;
+            R8 = 0x0;
+            RCX = 0x6560D27261FEC3CD;
+            RAX -= RCX;
+            R8 = _rotl64(R8, 0x10);
+            R8 ^= R11;
+            RCX = RBX;
+            RCX *= RDX;
+            RDX = RAX;
+            R8 = ~R8;
+            RDX ^= RCX;
+            RAX = readMemory<uint64_t>(R8 + 0x9);
+            RAX *= RDX;
+            RCX = imageBase;
+            RAX ^= RCX;
+            RCX = 0x88F7E80C1A3D810D;
+            RAX ^= RCX;
+            return RAX;
+        }
+        case 9: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R14 = imageBase + 0x2B3B97D6;
+            RCX = R14;
+            RCX = ~RCX;
+            RCX ^= RBX;
+            RAX -= RCX;
+            RCX = RAX;
+            RCX >>= 0x26;
+            RAX ^= RCX;
+            RCX = imageBase;
+            RCX += 0x768D9C44;
+            RCX += RBX;
+            RAX += RCX;
+            RCX = imageBase;
+            RAX ^= RCX;
+            RDX = 0x0;
+            RCX = 0xB806EA076004BA03;
+            RCX += RAX;
+            RDX = _rotl64(RDX, 0x10);
+            RDX ^= R10;
+            RDX = ~RDX;
+            RAX = readMemory<uint64_t>(RDX + 0x9);
+            RAX *= RCX;
+            RCX = 0xEDE8FF8B79B50DB9;
+            RAX ^= RCX;
+            RCX = 0x6FB6C9522E542E57;
+            RAX *= RCX;
+            return RAX;
+        }
+        case 10: {
+            R14 = imageBase + 0x30AA903C;
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RDX = 0x0;
+            RCX = imageBase + 0x94AF;
+            RDX = _rotl64(RDX, 0x10);
+            RDX ^= R10;
+            RDX = ~RDX;
+            RDX = readMemory<uint64_t>(RDX + 0x9);
+            RDX *= RAX;
+            RAX = RBX;
+            RAX = ~RAX;
+            RAX += RDX;
+            RAX += RCX;
+            RCX = RAX;
+            RCX >>= 0xC;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x18;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x30;
+            RAX ^= RCX;
+            RCX = 0xACC4BF01026ACA41;
+            RAX *= RCX;
+            RCX = 0x7B0FC59EF989D401;
+            RAX *= RCX;
+            RCX = RBX;
+            RCX = ~RCX;
+            RCX *= R14;
+            RAX ^= RCX;
+            RAX += RBX;
+            RCX = 0xA7FA6EC3B6BE6B3;
+            RAX *= RCX;
+            return RAX;
+        }
+        case 11: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R15 = imageBase + 0x83A5;
+            RAX ^= RBX;
+            RCX = 0x40C12A8DB56F3975;
+            RAX ^= RCX;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R10;
+            RCX = ~RCX;
+            RAX *= readMemory<uint64_t>(RCX + 0x9);
+            RCX = imageBase + 0x4D9F690F;
+            RCX = ~RCX;
+            RCX *= RBX;
+            RAX += RCX;
+            RDX = RBX;
+            RDX = ~RDX;
+            RCX = imageBase + 0x209B04FB;
+            RCX = ~RCX;
+            RDX *= RCX;
+            RAX += RDX;
+            RCX = RAX;
+            RCX >>= 0x26;
+            RAX ^= RCX;
+            RCX = 0xFE5C09AC750B9363;
             RAX *= RCX;
             RCX = RBX;
             RCX *= R15;
-            RCX ^= RBX;
-            RAX ^= RCX;
-            RCX = imageBase;
-            RAX -= RBX;
             RAX -= RCX;
-            RAX -= 0x31E8;
+            return RAX;
+        }
+        case 12: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
             RCX = RAX;
             RCX >>= 0x1;
             RAX ^= RCX;
@@ -170,178 +466,55 @@ extern "C" auto decrypt_client_base(uint64_t clientInfo, uint64_t imageBase, uin
             RCX = RAX;
             RCX >>= 0x20;
             RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x4;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x8;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x10;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x20;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x1E;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x3C;
-            RAX ^= RCX;
-            return RAX;
-        }
-        case 4: {
-            R9 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = imageBase;
-            RCX += 0x281F;
-            RCX += RBX;
-            RAX ^= RCX;
-            RCX = 0xDF286BBF83F616D1;
+            RDX = RBX;
+            RDX = ~RDX;
+            RCX = imageBase + 0x5871BC1F;
+            RCX = ~RCX;
+            RDX += RCX;
+            RCX = 0x3D71B39825780613;
+            RAX ^= RDX;
             RAX *= RCX;
-            RCX = RAX;
-            RCX >>= 0x8;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x10;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x20;
-            RAX ^= RCX;
-            RCX = imageBase;
-            RAX ^= RCX;
-            RAX -= RCX;
-            RAX += 0xFFFFFFFFE4385B97;
-            RAX += RBX;
             RCX = 0x0;
             RCX = _rotl64(RCX, 0x10);
-            RCX ^= R9;
+            RCX ^= R10;
             RCX = ~RCX;
             RAX *= readMemory<uint64_t>(RCX + 0x9);
-            RCX = 0x4A4FFCF706C23293;
-            RAX -= RCX;
-            RCX = RAX;
-            RCX >>= 0x22;
-            RAX ^= RCX;
-            return RAX;
-        }
-        case 5: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = imageBase + 0x9128;
-            RCX -= RBX;
-            RAX += RCX;
-            RCX = RAX;
-            RCX >>= 0x26;
-            RDX = 0x0;
-            RCX ^= RAX;
-            RDX = _rotl64(RDX, 0x10);
-            RCX -= RBX;
-            RDX ^= R10;
-            RDX = ~RDX;
-            RAX = readMemory<uint64_t>(RDX + 0x9);
-            RAX *= RCX;
-            RCX = 0x347EE6669F93372E;
-            RAX -= RCX;
-            RCX = 0xCC4AC21D5E07EAFD;
-            RAX *= RCX;
-            RCX = imageBase;
-            RAX -= RCX;
-            RAX += 0xFFFFFFFFC0A98326;
-            RAX += RBX;
-            RCX = 0x25D8C69821A4B1C1;
-            RAX *= RCX;
-            return RAX;
-        }
-        case 6: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = imageBase;
-            RAX -= RCX;
-            RAX += 0xFFFFFFFFFFFF0A85;
-            RAX += RBX;
-            RCX = 0xDD3029A8BCE8D4D;
-            RAX *= RCX;
-            RDX = 0x0;
-            RDX = _rotl64(RDX, 0x10);
-            RCX = 0xFCFBF307C71E86A5;
-            RAX ^= RCX;
-            RDX ^= R10;
-            RCX = imageBase;
-            RDX = ~RDX;
-            RAX -= RCX;
-            RCX = RBX - 0x0F901;
-            RCX += RAX;
-            RAX = imageBase + 0x48A8C848;
-            RAX = ~RAX;
-            RAX *= RBX;
-            RCX ^= RAX;
-            RAX = readMemory<uint64_t>(RDX + 0x9);
-            RAX *= RCX;
-            RCX = RAX;
-            RCX >>= 0x24;
-            RAX ^= RCX;
-            RCX = 0x2F5690490931B637;
-            RAX *= RCX;
-            return RAX;
-        }
-        case 7: {
-            uint64_t RSP_0x58 = imageBase;
-            R14 = imageBase + 0x2491D7D9;
-            RCX = imageBase + 0x5E98C991;
-            RSP_0x58 = RCX; // mov [rsp+58h],rcx
-            R9 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = 0x635E4B2FC3D0A10D;
-            RAX *= RCX;
-            RCX = R14;
+            RCX = imageBase + 0x620C;
             RCX = ~RCX;
-            RCX ^= RBX;
-            RAX += RCX;
-            RCX = 0x51256D5DC16562EC;
+            RCX -= RBX;
             RAX ^= RCX;
             RCX = RAX;
-            RCX >>= 0x6;
+            RCX >>= 0x1F;
             RAX ^= RCX;
             RCX = RAX;
-            RCX >>= 0xC;
+            RCX >>= 0x3E;
             RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x18;
+            RCX = 0x94CCAF9E67675B86;
             RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x30;
-            RAX ^= RCX;
-            RCX = RBX;
-            RCX *= RSP_0x58; // imul rcx,[rsp+58h]
-            RAX += RCX;
-            RCX = imageBase;
-            RAX -= RCX;
-            RCX = RAX;
-            RCX >>= 0xC;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x18;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x30;
-            RAX ^= RCX;
+            RCX = 0xEEDDDC399380CB03;
+            RAX *= RCX;
+            return RAX;
+        }
+        case 13: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R15 = imageBase + 0x24DDB6C6;
+            R14 = imageBase + 0x44386CDB;
+            RDX = RBX;
+            RDX = ~RDX;
+            RCX = R15;
+            RCX = ~RCX;
+            RDX += RCX;
+            RAX ^= RDX;
             RCX = 0x0;
             RCX = _rotl64(RCX, 0x10);
-            RCX ^= R9;
+            RCX ^= R10;
             RCX = ~RCX;
             RAX *= readMemory<uint64_t>(RCX + 0x9);
-            return RAX;
-        }
-        case 8: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RDX = 0x0;
-            RDX = _rotl64(RDX, 0x10);
-            RDX ^= R10;
-            RCX = 0xF9180DCDF5F228B4;
-            RCX += RAX;
-            RDX = ~RDX;
-            RAX = readMemory<uint64_t>(RDX + 0x9);
-            RAX *= RCX;
-            RAX += RBX;
             RCX = RAX;
-            RCX >>= 0x5;
+            RCX >>= 0x1D;
+            RAX ^= RCX;
+            RCX = RAX;
+            RCX >>= 0x3A;
             RAX ^= RCX;
             RCX = RAX;
             RCX >>= 0xA;
@@ -352,241 +525,74 @@ extern "C" auto decrypt_client_base(uint64_t clientInfo, uint64_t imageBase, uin
             RCX = RAX;
             RCX >>= 0x28;
             RAX ^= RCX;
-            RCX = imageBase;
-            RAX ^= RCX;
-            RCX = 0xEE1131A827DCAA68;
-            RAX -= RBX;
-            RAX ^= RCX;
-            RCX = 0xB6B2FC7C21D1D489;
-            RAX *= RCX;
-            return RAX;
-        }
-        case 9: {
-            R15 = imageBase + 0x74E0B964;
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RAX += RBX;
-            RCX = imageBase + 0x2E0E6E37;
-            RAX += RCX;
-            RCX = 0xFA547910F03B3987;
-            RAX *= RCX;
-            RCX = imageBase + 0x91DC;
-            RCX = ~RCX;
-            RCX *= RBX;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x2;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x4;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x8;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x10;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x20;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0xB;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x16;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x2C;
-            RAX ^= RCX;
-            RCX = imageBase;
-            RAX ^= RCX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RCX = ~RCX;
-            RAX *= readMemory<uint64_t>(RCX + 0x9);
-            RCX = R15;
+            RCX = R14;
             RCX = ~RCX;
             RCX ^= RBX;
+            RAX -= RCX;
+            RCX = 0xA425934513878AA5;
+            RAX ^= RCX;
+            RCX = 0xEBB297007E6A6869;
+            RAX *= RCX;
+            RCX = 0x71D340402BC33382;
             RAX += RCX;
             return RAX;
         }
-        case 10: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = RAX;
-            RCX >>= 0x1B;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x36;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x22;
-            RCX ^= RBX;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x15;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x2A;
-            RAX ^= RCX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RCX = ~RCX;
-            RAX *= readMemory<uint64_t>(RCX + 0x9);
-            RCX = 0x5D93FBAC7F625877;
-            RAX *= RCX;
-            RCX = 0x52B757443CDBD28B;
+        case 14: {
+            uint64_t RSP_0x50 = imageBase;
+            RCX = imageBase + 0x2F3E;
+            RSP_0x50 = RCX; // mov [rsp+50h],rcx
+            R9 = readMemory<uint64_t>(imageBase + 0x6358146);
+            RCX = imageBase;
             RAX += RCX;
-            RCX = 0x5E17A54EAA80B6A5;
-            RAX *= RCX;
-            return RAX;
-        }
-        case 11: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = 0x4041D2698092818B;
-            RAX *= RCX;
-            RCX = 0x6E7B1B11ABDFF2FA;
+            RCX = imageBase;
             RAX ^= RCX;
-            RDX = 0x0;
-            RDX = _rotl64(RDX, 0x10);
-            RCX = RBX + RAX;
-            RDX ^= R10;
-            RDX = ~RDX;
-            RAX = readMemory<uint64_t>(RDX + 0x9);
-            RAX *= RCX;
-            RCX = RAX;
-            RCX >>= 0x14;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x28;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x6;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0xC;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x18;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x30;
-            RAX ^= RCX;
-            RCX = 0x40077D00487E24C2;
-            RAX += RCX;
-            RAX -= RBX;
-            return RAX;
-        }
-        case 12: {
-            R9 = readMemory<uint64_t>(imageBase + 0x6603146);
-            R11 = imageBase + 0x1263;
-            RCX = 0xA8101149FD4CA7C3;
-            RAX *= RCX;
-            R15 = 0x4EC0B4781CB32BBF;
+            RCX = 0x5B3DE4A99B478B9C;
+            RAX -= RCX;
             RCX = RBX;
-            RCX = ~RCX;
-            RCX *= R11;
-            RCX += R15;
+            RCX *= RSP_0x50; // imul rcx,[rsp+50h]
             RAX += RCX;
             RCX = 0x0;
             RCX = _rotl64(RCX, 0x10);
             RCX ^= R9;
             RCX = ~RCX;
             RAX *= readMemory<uint64_t>(RCX + 0x9);
-            RCX = RAX;
-            RCX >>= 0x1E;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x3C;
-            RAX ^= RCX;
-            RAX ^= RBX;
-            RCX = 0x4E80F1A0C98C468;
-            RAX += RCX;
-            RAX -= RBX;
-            return RAX;
-        }
-        case 13: {
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            R11 = imageBase + 0x6267F8D9;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RCX = ~RCX;
-            RCX = readMemory<uint64_t>(RCX + 0x9);
+            RCX = 0xC04FC33339F325BD;
             RAX *= RCX;
-            RCX = 0x87FBBF81F585A7F5;
-            RAX *= RCX;
+            RCX = RAX;
+            RCX >>= 0x22;
+            RAX ^= RCX;
             RCX = imageBase;
-            RAX += RCX;
-            RCX = RBX + RAX;
-            RAX = 0xE2DF381128AD7D;
-            RCX ^= RAX;
-            RAX = RCX;
-            RAX >>= 0x15;
-            RCX ^= RAX;
-            RAX = RCX;
-            RAX >>= 0x2A;
             RAX ^= RCX;
-            RCX = R11;
-            RCX = ~RCX;
-            RAX -= RBX;
-            RAX += RCX;
-            RCX = imageBase;
-            RAX -= RCX;
-            return RAX;
-        }
-        case 14: {
-            R11 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RDX = imageBase + 0xB8FD;
-            RCX = RBX;
-            RCX *= RDX;
-            R8 = 0x0;
-            R8 = _rotl64(R8, 0x10);
-            R8 ^= R11;
-            RDX = RAX + RCX * 2;
-            R8 = ~R8;
-            RAX = imageBase + 0x3DA2C48A;
-            RDX += RAX;
-            RAX = readMemory<uint64_t>(R8 + 0x9);
-            RAX *= RDX;
-            RCX = RAX;
-            RCX >>= 0x15;
-            RAX ^= RCX;
-            RCX = RAX;
-            RCX >>= 0x2A;
-            RAX ^= RCX;
-            RCX = 0x63F739E7ACE8DEFA;
-            RAX -= RCX;
-            RCX = 0xECA41A7D230C65B;
-            RAX *= RCX;
             return RAX;
         }
         case 15: {
-            R15 = imageBase + 0x4A2;
-            R10 = readMemory<uint64_t>(imageBase + 0x6603146);
-            RCX = imageBase;
-            RAX -= RCX;
+            R11 = readMemory<uint64_t>(imageBase + 0x6358146);
+            R15 = imageBase + 0x5FEE;
+            RCX = RBX;
+            RCX = ~RCX;
+            RCX ^= R15;
+            RAX += RCX;
             RCX = RAX;
-            RCX >>= 0x15;
+            RCX >>= 0x22;
             RAX ^= RCX;
             RCX = RAX;
-            RCX >>= 0x2A;
-            RDX = 0x0;
-            RCX ^= RAX;
-            RDX = _rotl64(RDX, 0x10);
-            RDX ^= R10;
-            RDX = ~RDX;
-            RAX = readMemory<uint64_t>(RDX + 0x9);
+            RCX >>= 0x26;
+            RAX ^= RCX;
+            R8 = 0x0;
+            R8 = _rotl64(R8, 0x10);
+            RCX = imageBase;
+            RAX -= RCX;
+            R8 ^= R11;
+            R8 = ~R8;
+            RDX = 0xD2E4E9A984CB1482;
+            RDX += RAX;
+            RDX += RBX;
+            RAX = readMemory<uint64_t>(R8 + 0x9);
+            RAX *= RDX;
+            RCX = 0x668190FC03DA69F9;
             RAX *= RCX;
-            RAX += RBX;
-            RCX = 0xC3EBCF9689C9BEB;
-            RAX *= RCX;
-            RCX = 0x7631FAD984D70CD9;
-            RAX *= RCX;
-            RCX = 0x2D351ADE4F41F93F;
-            RAX += RCX;
-            RAX ^= RBX;
-            RAX ^= R15;
+            RCX = 0x7DCF9F0915447B5B;
+            RAX -= RCX;
             return RAX;
         }
     }
@@ -596,383 +602,67 @@ extern "C" auto decrypt_bone_base(uint64_t imageBase, uint64_t peb) -> uint64_t
 {
     uint64_t RAX = imageBase, RBX = imageBase, RCX = imageBase, RDX = imageBase, R8 = imageBase, RDI = imageBase, RSI = imageBase, R9 = imageBase, R10 = imageBase, R11 = imageBase, R12 = imageBase, R13 = imageBase, R14 = imageBase, R15 = imageBase, RBP = 0, RSP = 0;
 
-    R8 = readMemory<uint64_t>(imageBase + 0x155A7FE8);
+    R8 = readMemory<uint64_t>(imageBase + 0x152FB068);
     if (R8 == 0) {
         return 0;
     }
     RBX = peb; // mov rbx,gs:[rax]
     // test r8,r8
-    // je 00007FF6870B3AF5h
+    // je 00007FF65E80DD14h
     RAX = RBX;
-    RAX = _rotl64(RAX, 0x21);
+    RAX >>= 0x1F;
     RAX &= 0xF;
     // cmp rax,0Eh
-    // ja 00007FF6870B3628h
+    // ja 00007FF65E80D7A0h
     switch (RAX) {
         case 0: {
-            uint64_t RBP_NEG_0x30 = imageBase;
-            R9 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = 0x8E1AF47C49C05F7D;
-            R8 ^= RAX;
+            uint64_t RBP_NEG_0x38 = imageBase;
+            uint64_t RSP_0x70 = imageBase;
+            // push rbx
+            // pushfq
+            // pop rbx
+            // popfq
+            // pop rbx
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = imageBase + 0xA176;
+            RBP_NEG_0x38 = RAX; // mov [rbp-38h],rax
+            RAX = 0x6E33B4D07235DCE1;
+            RSP_0x70 = RAX; // mov [rsp+70h],rax
+            RAX = imageBase;
+            R8 -= RAX;
             RAX = 0x0;
             RAX = _rotl64(RAX, 0x10);
-            RAX ^= R9;
+            RAX ^= R10;
             RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
-            RAX = imageBase;
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            RAX = R8;
+            RAX >>= 0x1E;
             R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x3C;
+            R8 ^= RAX;
+            R8 *= RSP_0x70; // imul r8,[rsp+70h]
             RAX = RBX;
-            RAX -= RBP_NEG_0x30; // sub rax,[rbp-30h]
-            R8 += RAX;
-            RAX = 0x3BC383EE0989D5FB;
-            R8 *= RAX;
-            RAX = 0x3F03F1C19A86FE5F;
-            R8 += RAX;
-            RAX = R8;
-            RAX >>= 0x17;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x2E;
-            R8 ^= RAX;
-            RAX = 0x317CC2C5DB16CED9;
+            RAX *= RBP_NEG_0x38; // imul rax,[rbp-38h]
             R8 -= RAX;
+            RAX = 0x1588F6554284D28E;
+            R8 -= RAX;
+            RCX = imageBase;
+            RAX = 0x4F8498C6B1335BDA;
+            RAX -= RCX;
+            R8 += RAX;
             return R8;
         }
         case 1: {
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            R8 += RBX;
-            RAX = 0xD52E0A124183921D;
-            R8 += RAX;
-            RAX = imageBase;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x14;
-            R8 ^= RAX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RAX = R8;
-            RAX >>= 0x28;
-            RAX ^= R8;
-            RCX = _byteswap_uint64(RCX);
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RAX;
-            RAX = imageBase;
-            R8 -= RAX;
-            RAX = 0x70ACDD8EF6846122;
-            R8 -= RAX;
-            RAX = 0xDA0E2D2CE4B2F84F;
-            R8 *= RAX;
-            return R8;
-        }
-        case 2: {
-            uint64_t RBP_NEG_0x80 = imageBase;
-            // push rbx
+            uint64_t RSP_0x70 = imageBase;
+            // push rcx
             // pushfq
-            // pop rbx
+            // pop rcx
             // popfq
-            // pop rbx
-            R11 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase + 0x1306;
-            RBP_NEG_0x80 = RAX; // mov [rbp-80h],rax
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = imageBase;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0xC;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x18;
-            R8 ^= RAX;
-            RAX = R8;
-            RCX = 0x0;
-            RAX >>= 0x30;
-            RAX ^= R8;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R11;
-            R8 = 0x2E90538619E40F20;
-            RAX ^= R8;
-            RCX = _byteswap_uint64(RCX);
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RAX;
-            RAX = 0xB80F0EAB4EE77825;
-            R8 *= RAX;
-            RAX = RBX;
-            RAX = ~RAX;
-            RAX *= RBP_NEG_0x80; // imul rax,[rbp-80h]
-            R8 += RAX;
-            RAX = 0xF3935694AC4F54B;
-            R8 *= RAX;
-            return R8;
-        }
-        case 3: {
-            uint64_t RSP_0x68 = imageBase;
-            // push rax
-            // pushfq
-            // pop rax
-            // popfq
-            // pop rax
-            RAX = imageBase + 0x4906101B;
-            RSP_0x68 = RAX; // mov [rsp+68h],rax
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = 0x114539BCB7C07837;
-            R8 *= RAX;
-            R8 ^= RBX;
-            RCX = 0x0;
-            RAX = R8;
-            RCX = _rotl64(RCX, 0x10);
-            RAX >>= 0x17;
-            RCX ^= R10;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x2E;
-            RAX ^= R8;
-            RCX = _byteswap_uint64(RCX);
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            RCX = RBX;
-            R8 *= RAX;
-            RAX = 0x2F473A03275248CB;
-            R8 += RAX;
-            RCX = ~RCX;
-            RAX = imageBase + 0x74007CC4;
-            RAX = ~RAX;
-            RCX += RAX;
-            R8 ^= RCX;
-            RAX = RBX;
-            RAX ^= RSP_0x68; // xor rax,[rsp+68h]
-            R8 += RAX;
-            RCX = RBX;
-            RCX = ~RCX;
-            RAX = imageBase + 0xF757;
-            RAX = ~RAX;
-            R8 += RAX;
-            R8 += RCX;
-            return R8;
-        }
-        case 4: {
-            uint64_t RBP_NEG_0x58 = imageBase;
-            uint64_t RBP_NEG_0x28 = imageBase;
-            RAX = imageBase + 0x6AE6F229;
-            RBP_NEG_0x58 = RAX; // mov [rbp-58h],rax
-            RAX = imageBase + 0xAA83;
-            RBP_NEG_0x28 = RAX; // mov [rbp-28h],rax
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase;
-            RAX += 0x45ED6AC5;
-            RCX = 0x0;
-            RAX += RBX;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RCX = _byteswap_uint64(RCX);
-            RCX = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RCX;
-            R8 ^= RAX;
-            RAX = RBX;
-            RAX *= RBP_NEG_0x28; // imul rax,[rbp-28h]
-            R8 ^= RAX;
-            RAX = 0x2E009C49221FA9E4;
-            R8 -= RAX;
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = 0x568A25CF438D6543;
-            R8 *= RAX;
-            RAX = RBX;
-            RAX = ~RAX;
-            RAX *= RBP_NEG_0x58; // imul rax,[rbp-58h]
-            R8 ^= RAX;
-            RAX = 0x5B0F3BC1A11076E3;
-            R8 += RAX;
-            return R8;
-        }
-        case 5: {
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = R8;
-            RAX >>= 0xA;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x14;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x28;
-            R8 ^= RAX;
-            R8 ^= RBX;
-            RAX = 0x64E7E586730204B1;
-            R8 *= RAX;
-            RAX = 0x0;
-            RAX = _rotl64(RAX, 0x10);
-            RAX ^= R10;
-            RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
-            RAX = R8;
-            RAX >>= 0x1A;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x34;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = 0x18D0928B2B48050C;
-            R8 -= RAX;
-            RAX = 0x7BECCED455EDAF2E;
-            R8 += RAX;
-            return R8;
-        }
-        case 6: {
-            R11 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase;
-            RAX += 0x3A9D;
-            RAX += RBX;
-            R8 += RAX;
-            RAX = R8;
-            RAX >>= 0x1D;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x3A;
-            R8 ^= RAX;
-            RDX = 0x0;
-            RCX = 0xF090D80A1E8721B2;
-            RDX = _rotl64(RDX, 0x10);
-            RCX += RBX;
-            RCX += R8;
-            RDX ^= R11;
-            RDX = _byteswap_uint64(RDX);
-            R8 = readMemory<uint64_t>(RDX + 0xD);
-            R8 *= RCX;
-            RAX = 0x2EFCDE57AB128A7D;
-            R8 ^= RAX;
-            RAX = imageBase + 0x821A;
-            RAX = ~RAX;
-            R8 -= RBX;
-            R8 += RAX;
-            RAX = 0xEE7544C793F5CA07;
-            R8 *= RAX;
-            return R8;
-        }
-        case 7: {
-            // push rbx
-            // pushfq
-            // pop rbx
-            // popfq
-            // pop rbx
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            R8 -= RBX;
-            RCX = RBX;
-            RAX = imageBase;
-            R8 -= RAX;
-            RAX = 0xFB97E6D9FBFD5293;
-            R8 *= RAX;
-            RAX = imageBase + 0x187B1FAB;
-            RCX ^= RAX;
-            RAX = 0xA3FC595FB9D96B70;
-            R8 += RAX;
-            R8 += RCX;
-            RAX = 0x109A1466C7A4FA6F;
-            R8 *= RAX;
-            RAX = 0x0;
-            RAX = _rotl64(RAX, 0x10);
-            RAX ^= R10;
-            RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
-            RAX = imageBase;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1B;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x36;
-            R8 ^= RAX;
-            RAX = 0x3217CE681F7709FB;
-            R8 *= RAX;
-            return R8;
-        }
-        case 8: {
-            uint64_t RBP_NEG_0x68 = imageBase;
-            uint64_t RSP_0x78 = imageBase;
-            // pushfq
-            // push rax
-            // pop rax
-            // pop rax
-            // popfq
-            RCX = imageBase + 0x367762EB;
-            RSP_0x78 = RCX; // mov [rsp+78h],rcx
-            RAX = 0x7EB164DEDEA9C54C;
-            RBP_NEG_0x68 = RAX; // mov [rbp-68h],rax
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            R8 += RBX;
-            RAX = R8;
-            RAX >>= 0x1D;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x3A;
-            RAX ^= RBX;
-            R8 ^= RAX;
-            RAX = 0x40CFE210A1D62E4D;
-            R8 ^= RAX;
-            R8 ^= RBP_NEG_0x68; // xor r8,[rbp-68h]
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RAX = RBX;
-            RAX ^= RSP_0x78; // xor rax,[rsp+78h]
-            RCX ^= R10;
-            RCX = _byteswap_uint64(RCX);
-            RAX += R8;
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RAX;
-            RAX = 0x97EEA7211DDDB183;
-            R8 *= RAX;
-            return R8;
-        }
-        case 9: {
-            uint64_t RBP_NEG_0x38 = imageBase;
-            RAX = 0x7EA33D33E320DCD9;
-            RBP_NEG_0x38 = RAX; // mov [rbp-38h],rax
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase;
-            R8 ^= RAX;
-            RAX = 0x0;
-            RAX = _rotl64(RAX, 0x10);
-            RAX ^= R10;
-            RAX = _byteswap_uint64(RAX);
-            RAX = readMemory<uint64_t>(RAX + 0xD);
-            RAX *= RBP_NEG_0x38; // imul rax,[rbp-38h]
-            R8 *= RAX;
-            RAX = R8;
-            RAX >>= 0x15;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x2A;
-            R8 ^= RAX;
-            RAX = imageBase + 0x9C27;
-            RAX = ~RAX;
-            RAX += RBX;
-            R8 ^= RAX;
-            RAX = 0x39E3C04BACA3B762;
-            R8 ^= RAX;
+            // pop rcx
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = 0x4CB24DAE2BD35C1F;
+            RSP_0x70 = RAX; // mov [rsp+70h],rax
             RAX = R8;
             RAX >>= 0x5;
             R8 ^= RAX;
@@ -985,19 +675,99 @@ extern "C" auto decrypt_bone_base(uint64_t imageBase, uint64_t peb) -> uint64_t
             RAX = R8;
             RAX >>= 0x28;
             R8 ^= RAX;
-            RAX = imageBase + 0x33D0D3D1;
-            RAX = ~RAX;
-            RAX *= RBX;
+            RAX = 0x2A67EE5D220D754A;
+            R8 -= RAX;
+            RAX = imageBase + 0x6B86;
+            RCX = RBX;
+            RCX = ~RCX;
+            RCX *= RAX;
+            RAX = RBX;
+            RCX += R8;
+            R8 = imageBase;
+            RAX -= R8;
+            R8 = RCX;
+            RAX -= 0x42B8;
             R8 ^= RAX;
-            return R8;
-        }
-        case 10: {
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
+            RAX = R8;
+            RAX >>= 0x7;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0xE;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x1C;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x38;
+            R8 ^= RAX;
+            RAX = 0x239437FC18D83A9E;
+            R8 ^= RAX;
             RAX = 0x0;
             RAX = _rotl64(RAX, 0x10);
             RAX ^= R10;
             RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
+            RAX = readMemory<uint64_t>(RAX + 0x11);
+            RAX *= RSP_0x70; // imul rax,[rsp+70h]
+            R8 *= RAX;
+            return R8;
+        }
+        case 2: {
+            R11 = imageBase + 0x65E6;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = RBX;
+            RAX ^= R11;
+            R8 += RAX;
+            RAX = 0xA04060743EEEC81;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x20;
+            R8 ^= RAX;
+            R8 -= RBX;
+            RAX = imageBase;
+            R8 ^= RAX;
+            RAX = 0xCAA0FFD0709BBB87;
+            R8 *= RAX;
+            RAX = 0x3C1E90309C0BE784;
+            R8 ^= RAX;
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R9;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            return R8;
+        }
+        case 3: {
+            uint64_t RSP_0x68 = imageBase;
+            // pushfq
+            // push rax
+            // pop rax
+            // pop rax
+            // popfq
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = imageBase + 0xEB6C;
+            RSP_0x68 = RAX; // mov [rsp+68h],rax
+            RAX = 0x540D0AF5F4CDB74B;
+            RAX *= R8;
+            R8 = imageBase;
+            RAX ^= R8;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R10;
+            RCX = _byteswap_uint64(RCX);
+            R8 = readMemory<uint64_t>(RCX + 0x11);
+            R8 *= RAX;
+            RAX = imageBase;
+            RAX += 0x770D;
+            RAX += RBX;
+            R8 ^= RAX;
+            RAX = imageBase;
+            R8 ^= RAX;
+            RAX = RBX + 1;
+            RAX *= RSP_0x68; // imul rax,[rsp+68h]
+            R8 += RAX;
+            RAX = R8;
+            RAX >>= 0x5;
+            R8 ^= RAX;
             RAX = R8;
             RAX >>= 0xA;
             R8 ^= RAX;
@@ -1006,6 +776,152 @@ extern "C" auto decrypt_bone_base(uint64_t imageBase, uint64_t peb) -> uint64_t
             R8 ^= RAX;
             RAX = R8;
             RAX >>= 0x28;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x27;
+            R8 ^= RAX;
+            return R8;
+        }
+        case 4: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = imageBase;
+            RAX += R8;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R10;
+            RCX = _byteswap_uint64(RCX);
+            R8 = readMemory<uint64_t>(RCX + 0x11);
+            R8 *= RAX;
+            RCX = imageBase + 0xAD05;
+            RAX = R8;
+            RAX >>= 0x1A;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x34;
+            R8 ^= RAX;
+            RAX = imageBase + 0x316BDF41;
+            RAX -= RBX;
+            R8 += RAX;
+            RAX = 0x86DB83FC703A9029;
+            R8 *= RAX;
+            R8 ^= RBX;
+            R8 ^= RCX;
+            RAX = 0xFAA4F606C5BA248C;
+            R8 ^= RAX;
+            RAX = 0x28AE5E481A72B2B3;
+            R8 *= RAX;
+            return R8;
+        }
+        case 5: {
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R9;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            RAX = R8 + RBX;
+            R8 = 0x1395E21D03239025;
+            RAX += R8;
+            R8 = imageBase;
+            R8 += RAX;
+            RAX = imageBase;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x21;
+            R8 ^= RAX;
+            RAX = imageBase + 0x8A9B;
+            R8 += RBX;
+            R8 += RAX;
+            R8 ^= RBX;
+            RAX = 0xDFB38FA8F07B7E79;
+            R8 *= RAX;
+            return R8;
+        }
+        case 6: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = R8;
+            RAX >>= 0xF;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x1E;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x3C;
+            R8 ^= RAX;
+            RAX = imageBase;
+            R8 ^= RAX;
+            RAX = 0x19B16A317394149D;
+            R8 ^= RAX;
+            RAX = 0x6E8320546EF271ED;
+            R8 *= RAX;
+            RAX = 0x27C46D7702E18107;
+            R8 *= RAX;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
+            RCX ^= R10;
+            RCX = _byteswap_uint64(RCX);
+            RCX = readMemory<uint64_t>(RCX + 0x11);
+            RCX *= R8;
+            R8 = imageBase + 0xDA3A;
+            R8 *= RBX;
+            R8 += RCX;
+            RAX = imageBase + 0x1463840C;
+            RAX -= RBX;
+            R8 += RAX;
+            return R8;
+        }
+        case 7: {
+            R11 = imageBase + 0x1F57940D;
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = R8;
+            RAX >>= 0x17;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x2E;
+            R8 ^= RAX;
+            RAX = R11;
+            RAX = ~RAX;
+            RAX += RBX;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x1C;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x38;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x17;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x2E;
+            R8 ^= RAX;
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R9;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            RAX = 0xC6F4A95E4EEDD47F;
+            R8 *= RAX;
+            RAX = imageBase;
+            R8 -= RAX;
+            RAX = 0xAB801A1C78E324AD;
+            R8 ^= RAX;
+            return R8;
+        }
+        case 8: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RCX = imageBase + 0x3C70771D;
+            RAX = imageBase + 0x3548;
+            RAX = ~RAX;
+            RAX ^= RBX;
+            R8 ^= RAX;
+            R8 += RBX;
+            R8 ^= RBX;
+            RAX = 0xBD25B6162FFC4A37;
+            R8 ^= RCX;
+            R8 *= RAX;
+            RAX = R8;
+            RAX >>= 0x8;
             R8 ^= RAX;
             RAX = R8;
             RAX >>= 0x10;
@@ -1013,214 +929,262 @@ extern "C" auto decrypt_bone_base(uint64_t imageBase, uint64_t peb) -> uint64_t
             RAX = R8;
             RAX >>= 0x20;
             R8 ^= RAX;
+            RCX = 0x0;
+            RCX = _rotl64(RCX, 0x10);
             RAX = R8;
-            RAX >>= 0x7;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = 0xF7BB1E98D088AD8B;
+            RCX ^= R10;
+            RAX -= RBX;
+            RCX = _byteswap_uint64(RCX);
+            R8 = readMemory<uint64_t>(RCX + 0x11);
+            RCX = imageBase + 0x573BDED9;
             R8 *= RAX;
-            RAX = 0xC976B79B9B311D73;
-            R8 ^= RAX;
-            RAX = 0x296FF20A020B145;
-            R8 -= RAX;
-            return R8;
-        }
-        case 11: {
-            uint64_t RBP_NEG_0x60 = imageBase;
-            RAX = 0xE2B7FA23133CBF79;
-            RBP_NEG_0x60 = RAX; // mov [rbp-60h],rax
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RCX = RBX;
-            RCX = ~RCX;
-            RAX = imageBase + 0xA98A;
-            RAX = ~RAX;
-            R8 += RAX;
-            R8 += RCX;
-            RCX = imageBase + 0xBA46;
             RAX = RBX;
-            RAX = ~RAX;
             RAX *= RCX;
             R8 ^= RAX;
-            RAX = 0x0;
-            RAX = _rotl64(RAX, 0x10);
-            RAX ^= R10;
-            RAX = _byteswap_uint64(RAX);
-            RAX = readMemory<uint64_t>(RAX + 0xD);
-            RAX *= RBP_NEG_0x60; // imul rax,[rbp-60h]
-            R8 *= RAX;
-            RAX = R8;
-            RAX >>= 0x7;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = 0x8A5E388820A978A;
-            R8 += RAX;
-            RAX = R8;
-            RAX >>= 0x21;
-            R8 ^= RAX;
             return R8;
         }
-        case 12: {
-            uint64_t RBP_NEG_0x68 = imageBase;
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase + 0x7B03;
-            RBP_NEG_0x68 = RAX; // mov [rbp-68h],rax
-            R8 ^= RBX;
-            RAX = imageBase + 0x57C3;
-            R8 ^= RAX;
-            RAX = RBX;
-            RAX ^= RBP_NEG_0x68; // xor rax,[rbp-68h]
-            R8 -= RAX;
-            RAX = 0x3FADFCBDFC9CE50D;
-            R8 += RAX;
-            RAX = 0xC3FD16651D55C2A9;
-            R8 *= RAX;
-            RAX = 0x0;
-            RAX = _rotl64(RAX, 0x10);
-            RAX ^= R10;
-            RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
-            RAX = 0x6579E511E80CD1BC;
-            R8 += RAX;
-            RAX = R8;
-            RAX >>= 0xE;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1C;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x38;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x1A;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x34;
-            R8 ^= RAX;
-            return R8;
-        }
-        case 13: {
+        case 9: {
             // push rbx
             // pushfq
             // pop rbx
             // popfq
             // pop rbx
-            R9 = readMemory<uint64_t>(imageBase + 0x660321F);
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
             RAX = 0x0;
             RAX = _rotl64(RAX, 0x10);
             RAX ^= R9;
             RAX = _byteswap_uint64(RAX);
-            R8 *= readMemory<uint64_t>(RAX + 0xD);
-            RAX = 0xF806BFC3C08D5963;
-            R8 *= RAX;
-            R8 += RBX;
-            RAX = 0x34865D0E64A4AD7C;
-            R8 ^= RAX;
-            RAX = imageBase;
-            R8 -= RBX;
-            R8 -= RAX;
-            R8 -= 0xA2C6;
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
             RAX = R8;
-            RAX >>= 0xA;
+            RAX >>= 0xC;
             R8 ^= RAX;
             RAX = R8;
-            RAX >>= 0x14;
+            RAX >>= 0x18;
             R8 ^= RAX;
             RAX = R8;
-            RAX >>= 0x28;
+            RAX >>= 0x30;
             R8 ^= RAX;
-            return R8;
-        }
-        case 14: {
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RAX = imageBase;
-            R8 ^= RAX;
-            RAX = 0xBF29C9BD8A83177F;
-            R8 *= RAX;
-            RAX = R8;
-            RAX >>= 0xA;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x14;
-            R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x28;
-            R8 ^= RAX;
-            RCX = 0x0;
-            RCX = _rotl64(RCX, 0x10);
-            RCX ^= R10;
-            RAX = imageBase + 0x78ED;
-            RAX = ~RAX;
-            RAX ^= RBX;
-            RAX ^= R8;
-            RCX = _byteswap_uint64(RCX);
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RAX;
-            R8 -= RBX;
-            RAX = 0x76ECF464A0CD7BF3;
-            R8 ^= RAX;
-            RAX = imageBase;
-            R8 ^= RAX;
-            return R8;
-        }
-        case 15: {
-            R10 = readMemory<uint64_t>(imageBase + 0x660321F);
-            RCX = imageBase + 0x97ED;
-            RAX = 0x1E953F34B7796363;
-            RCX = ~RCX;
-            R8 *= RAX;
-            RAX = 0x513E944EFD5A7B1F;
-            R8 -= RBX;
-            R8 += RAX;
-            R8 += RCX;
-            RAX = imageBase + 0x43A5;
-            RAX = ~RAX;
-            RCX = 0x0;
-            RAX *= RBX;
-            RCX = _rotl64(RCX, 0x10);
-            RAX ^= R8;
-            RCX ^= R10;
-            RCX = _byteswap_uint64(RCX);
-            R8 = readMemory<uint64_t>(RCX + 0xD);
-            R8 *= RAX;
             RAX = R8;
             RAX >>= 0x12;
             R8 ^= RAX;
             RAX = R8;
             RAX >>= 0x24;
             R8 ^= RAX;
+            R8 += RBX;
             RAX = R8;
-            RAX >>= 0x1D;
+            RAX >>= 0x23;
             R8 ^= RAX;
-            RAX = R8;
-            RAX >>= 0x3A;
-            R8 ^= RAX;
-            RAX = 0xF7A75C9D8298900B;
+            RAX = 0x7E3E416EF7F1D741;
             R8 *= RAX;
+            RAX = 0xF617ED5B72E590DE;
+            R8 ^= RAX;
+            RAX = 0x818141D2E8EA7F6F;
+            R8 *= RAX;
+            return R8;
+        }
+        case 10: {
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = imageBase;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x28;
+            R8 ^= RAX;
+            RAX = imageBase;
+            R8 -= RAX;
+            RCX = 0x0;
+            RAX = R8;
+            RCX = _rotl64(RCX, 0x10);
+            RAX >>= 0x20;
+            RCX ^= R10;
+            RAX ^= R8;
+            RCX = _byteswap_uint64(RCX);
+            R8 = readMemory<uint64_t>(RCX + 0x11);
+            R8 *= RAX;
+            RAX = 0xF37BC628D4B58CF3;
+            R8 *= RAX;
+            RAX = 0x2A8C713B6A73DA4D;
+            R8 += RAX;
+            RAX = 0x7122022471FD76A7;
+            R8 ^= RAX;
+            return R8;
+        }
+        case 11: {
+            uint64_t RBP_NEG_0x38 = imageBase;
+            // push rbx
+            // pushfq
+            // pop rbx
+            // popfq
+            // pop rbx
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            R11 = imageBase + 0x2E006611;
+            RAX = 0xC7B1BEFAE1F9E327;
+            R8 *= RAX;
+            R8 += R11;
+            RCX = RBX;
+            RCX = ~RCX;
+            R8 += RCX;
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R10;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            R8 -= RBP_NEG_0x38; // sub r8,[rbp-38h]
+            RAX = imageBase;
+            RAX += 0xEEE7;
+            RAX += RBX;
+            RAX ^= R8;
+            R8 = RAX;
+            RAX >>= 0x1A;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x34;
+            R8 ^= RAX;
+            R8 += RBX;
+            RAX = imageBase + 0x1E776935;
+            RAX -= RBX;
+            R8 ^= RAX;
+            return R8;
+        }
+        case 12: {
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = R8;
+            RAX >>= 0x11;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x22;
+            R8 ^= RAX;
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R9;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            RAX = R8;
+            RAX >>= 0x8;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x10;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x20;
+            R8 ^= RAX;
+            RAX = 0xD3A76E77D0439A87;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x17;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x2E;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x27;
+            R8 ^= RAX;
+            RAX = 0xE7C759589C81E2D1;
+            R8 *= RAX;
+            RAX = 0x92D8F3E599FB6C55;
+            R8 *= RAX;
+            return R8;
+        }
+        case 13: {
+            // pushfq
+            // push rbx
+            // pop rbx
+            // pop rbx
+            R10 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = 0xEDE0ED52BA16A73B;
+            R8 *= RAX;
+            RAX = R8;
+            RAX >>= 0x1C;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x38;
+            R8 ^= RAX;
+            R8 += RBX;
+            RAX = 0x40F028F390F9B4DB;
+            R8 *= RAX;
+            R8 ^= RBX;
+            RAX = imageBase;
+            R8 -= RAX;
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R10;
+            RAX = _byteswap_uint64(RAX);
+            RAX = readMemory<uint64_t>(RAX + 0x11);
+            R8 *= RAX;
+            RAX = imageBase;
+            R8 ^= RAX;
+            return R8;
+        }
+        case 14: {
+            uint64_t RBP_NEG_0x38 = imageBase;
+            uint64_t RBP_NEG_0x50 = imageBase;
+            RAX = imageBase + 0xA494;
+            RBP_NEG_0x38 = RAX; // mov [rbp-38h],rax
+            RAX = imageBase + 0x1F68E2F6;
+            RBP_NEG_0x50 = RAX; // mov [rbp-50h],rax
+            R9 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = 0x0;
+            RAX = _rotl64(RAX, 0x10);
+            RAX ^= R9;
+            RAX = _byteswap_uint64(RAX);
+            R8 *= readMemory<uint64_t>(RAX + 0x11);
+            RAX = RBX;
+            RAX ^= RBP_NEG_0x38; // xor rax,[rbp-38h]
+            R8 += RAX;
+            R8 ^= RBX;
+            RAX = 0x44F06411130D8786;
+            R8 -= RAX;
+            RAX = RBX;
+            RAX = ~RAX;
+            RAX ^= RBP_NEG_0x50; // xor rax,[rbp-50h]
+            R8 -= RAX;
+            RAX = 0x72F146FB8657DB4D;
+            R8 *= RAX;
+            RAX = R8;
+            RAX >>= 0x15;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x2A;
+            R8 ^= RAX;
+            RAX = 0x25EA3844D16C50F1;
+            R8 += RAX;
+            return R8;
+        }
+        case 15: {
+            R12 = imageBase + 0x6ED429A4;
+            R11 = readMemory<uint64_t>(imageBase + 0x6358219);
+            RAX = RBX;
+            RAX *= R12;
+            R8 -= RAX;
+            RAX = 0x16E71D0785BF5E85;
+            R8 *= RAX;
+            RAX = 0x164272E1C98C0650;
+            R8 -= RAX;
+            RAX = R8;
+            RAX >>= 0x26;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x12;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x24;
+            RAX ^= R8;
+            RDX = 0x0;
+            RDX = _rotl64(RDX, 0x10);
+            R8 = imageBase + 0x253C;
+            RDX ^= R11;
+            RCX = RBX;
+            RDX = _byteswap_uint64(RDX);
+            RCX = ~RCX;
+            RDX = readMemory<uint64_t>(RDX + 0x11);
+            RDX *= RAX;
+            R8 += RDX;
+            R8 += RCX;
+            RAX = R8;
+            RAX >>= 0x13;
+            R8 ^= RAX;
+            RAX = R8;
+            RAX >>= 0x26;
+            R8 ^= RAX;
             return R8;
         }
     }
@@ -1232,69 +1196,63 @@ extern "C" auto get_bone_index(uint32_t index, uint64_t imageBase) -> uint64_t
 
     RBX = index;
     RCX = RBX * 0x13C8;
-    RAX = 0xE3948B3CC1B00C01;
+    RAX = 0x4F23479A4BA8FAB5;
     R11 = imageBase;
     RAX = _umul128(RAX, RCX, &RDX);
-    R10 = 0xDBAEBD0FB4AA4B3;
-    RDX >>= 0xD;
-    RAX = RDX * 0x23FF;
+    R10 = 0x33B1DA233CBB3105;
+    RDX >>= 0xB;
+    RAX = RDX * 0x19E1;
     RCX -= RAX;
-    RAX = 0x6A8BFB7C61CE6389;
-    R8 = RCX * 0x23FF;
+    RAX = 0xF598CEFB88707C3D;
+    R8 = RCX * 0x19E1;
+    RAX = _umul128(RAX, R8, &RDX);
+    RDX >>= 0xD;
+    RAX = RDX * 0x215B;
+    R8 -= RAX;
+    RAX = 0xEA0EA0EA0EA0EA0F;
+    RAX = _umul128(RAX, R8, &RDX);
+    RAX = 0x948B0FCD6E9E0653;
+    RDX >>= 0x5;
+    RCX = RDX * 0x23;
     RAX = _umul128(RAX, R8, &RDX);
     RAX = R8;
     RAX -= RDX;
     RAX >>= 0x1;
     RAX += RDX;
-    RAX >>= 0xD;
-    RAX = RAX * 0x2D31;
-    R8 -= RAX;
-    RAX = 0x5806E0898ABED6E9;
-    RAX = _umul128(RAX, R8, &RDX);
-    RCX = R8;
-    RDX >>= 0xB;
-    RAX = RDX * 0x1173;
+    RAX >>= 0x8;
+    RCX += RAX;
+    RAX = RCX * 0x288;
+    RCX = R8 * 0x28A;
     RCX -= RAX;
-    RAX = 0xAAAAAAAAAAAAAAAB;
-    RAX = _umul128(RAX, R8, &RDX);
-    RCX <<= 0x3;
-    RDX >>= 0x1;
-    RAX = RDX + RDX * 2;
-    RAX += RAX;
-    RCX -= RAX;
-    RAX = readMemory<uint16_t>(RCX + R11 + 0x660B140);
+    RAX = readMemory<uint16_t>(RCX + R11 + 0x6362050);
     R8 = RAX * 0x13C8;
     RAX = R10;
     RAX = _umul128(RAX, R8, &RDX);
-    RCX = R8;
     RAX = R10;
-    RCX -= RDX;
-    RCX >>= 0x1;
-    RCX += RDX;
-    RCX >>= 0xC;
-    RCX = RCX * 0x1E5F;
+    RDX >>= 0xA;
+    RCX = RDX * 0x13CF;
     R8 -= RCX;
-    R9 = R8 * 0x2804;
+    R9 = R8 * 0x164B;
+    RAX = _umul128(RAX, R9, &RDX);
+    RDX >>= 0xA;
+    RAX = RDX * 0x13CF;
+    R9 -= RAX;
+    RAX = 0x97B425ED097B425F;
+    RAX = _umul128(RAX, R9, &RDX);
+    RAX = 0x83C977AB2BEDD28F;
+    RDX >>= 0x5;
+    RCX = RDX * 0x36;
     RAX = _umul128(RAX, R9, &RDX);
     RAX = R9;
     RAX -= RDX;
     RAX >>= 0x1;
     RAX += RDX;
-    RAX >>= 0xC;
-    RAX = RAX * 0x1E5F;
-    R9 -= RAX;
-    RAX = 0x824A4E60B3262BC5;
-    RAX = _umul128(RAX, R9, &RDX);
-    RAX = 0x2E8BA2E8BA2E8BA3;
-    RDX >>= 0x9;
-    RCX = RDX * 0x3EE;
-    RAX = _umul128(RAX, R9, &RDX);
-    RDX >>= 0x1;
-    RCX += RDX;
-    RAX = RCX * 0x16;
-    RCX = R9 + R9 * 2;
-    RCX <<= 0x3;
+    RAX >>= 0x7;
+    RCX += RAX;
+    RAX = RCX * 0x152;
+    RCX = R9 * 0x154;
     RCX -= RAX;
-    R15 = readMemory<uint16_t>(RCX + R11 + 0x6613CE0);
+    RSI = readMemory<uint16_t>(RCX + R11 + 0x63678F0);
     return R15;
 }
+
