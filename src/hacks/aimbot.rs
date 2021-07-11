@@ -117,7 +117,7 @@ fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut 
     ctx.mouse_accum.0 -= dx as f32;
     ctx.mouse_accum.1 -= dy as f32;
 
-    enigo::Enigo::new().mouse_move_relative(dx, dy);
+    unsafe { crate::util::move_mouse_relative(dx, dy); }
 }
 
 /// Gets the position to aim at given a player.
