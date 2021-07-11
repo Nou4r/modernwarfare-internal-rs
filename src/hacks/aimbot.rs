@@ -10,7 +10,6 @@ use crate::math;
 use crate::math::Vector3;
 use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
 use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone, Weapon};
-use enigo::MouseControllable;
 use serde::{Serialize, Deserialize};
 use crate::gui::GUI;
 
