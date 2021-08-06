@@ -1,6 +1,5 @@
 #![feature(llvm_asm)]
 #![feature(destructuring_assignment)]
-#![feature(maybe_uninit_ref)]
 #![feature(type_name_of_val)]
 #![feature(asm)]
 #![allow(clippy::missing_safety_doc)]
@@ -108,5 +107,4 @@ pub unsafe extern "C" fn on_input_event(input_type: InputType, key: i32) {
 #[link(name = "framework")]
 extern "C" {
     fn unload_cheat();
-    fn show_memory_editor();
 }

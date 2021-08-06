@@ -30,7 +30,6 @@ impl Gui {
 
         if crate::DEBUG {
             self.show_deubg_window(ui);
-            crate::show_memory_editor();
         }
 
         if !self.open {

@@ -9,7 +9,10 @@ use log::*;
 use winapi::um::winuser::VK_ESCAPE;
 
 extern "C" {
-    pub fn is_bad_ptr(ptr: u64) -> bool;
+    fn isBadPtr(ptr: u64) -> bool;
+}
+pub fn is_bad_ptr(ptr: u64) -> bool {
+    unsafe { isBadPtr(ptr) }
 }
 
 pub unsafe fn read_memory<T>(ptr: u64) -> T {

@@ -19,6 +19,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <dwmapi.h>
+#include "../framework/Syscall.h"
 
 // Configuration flags to add in your imconfig.h file:
 //#define IMGUI_IMPL_WIN32_DISABLE_GAMEPAD              // Disable gamepad support (this used to be meaningful before <1.81) but we know load XInput dynamically so the option is less relevant now.
@@ -167,7 +168,7 @@ static bool ImGui_ImplWin32_UpdateMouseCursor()
     if (imgui_cursor == ImGuiMouseCursor_None || io.MouseDrawCursor)
     {
         // Hide OS mouse cursor if imgui is drawing it or if it wants no cursor
-        ::SetCursor(NULL);
+        ::Syscall_SetCursor(NULL);
     }
     else
     {
@@ -185,7 +186,7 @@ static bool ImGui_ImplWin32_UpdateMouseCursor()
         case ImGuiMouseCursor_Hand:         win32_cursor = IDC_HAND; break;
         case ImGuiMouseCursor_NotAllowed:   win32_cursor = IDC_NO; break;
         }
-        ::SetCursor(::LoadCursor(NULL, win32_cursor));
+        ::Syscall_SetCursor(::LoadCursor(NULL, win32_cursor));
     }
     return true;
 }
@@ -195,19 +196,21 @@ static void ImGui_ImplWin32_UpdateMousePos()
     ImGuiIO& io = ImGui::GetIO();
 
     // Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
+    /*
     if (io.WantSetMousePos)
     {
         POINT pos = { (int)io.MousePos.x, (int)io.MousePos.y };
         if (::ClientToScreen(g_hWnd, &pos))
             ::SetCursorPos(pos.x, pos.y);
     }
+    */
 
     // Set mouse position
     io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
     POINT pos;
     if (HWND active_window = ::GetForegroundWindow())
         if (active_window == g_hWnd || ::IsChild(active_window, g_hWnd))
-            if (::GetCursorPos(&pos) && ::ScreenToClient(g_hWnd, &pos))
+            if (::Syscall_GetCursorPos(&pos) && ::ScreenToClient(g_hWnd, &pos))
                 io.MousePos = ImVec2((float)pos.x, (float)pos.y);
 }
 

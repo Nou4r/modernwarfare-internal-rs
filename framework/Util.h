@@ -7,7 +7,7 @@
 
 namespace utils
 {
-	inline bool isBadPtr(std::uintptr_t p)
+	extern "C" inline bool isBadPtr(std::uintptr_t p)
 	{
 		return !(p <= 0x7FFFFFFEFFFF && p >= 0x1000);
 	}

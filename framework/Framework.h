@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <Windows.h>
 
 enum class InputEventType {
     KeyDown = 0,
