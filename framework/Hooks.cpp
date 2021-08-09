@@ -33,7 +33,11 @@ HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterval, UIN
     graphics::start(pSwapChain, commandQueue);
     graphics::newFrame();
 
+#ifdef RUST_LIB
     interop::on_frame(ImGui::GetCurrentContext());
+#else
+    ImGui::ShowDemoWindow();
+#endif
 
     const auto result = graphics::render(pSwapChain, syncInterval, flags);
     return result;

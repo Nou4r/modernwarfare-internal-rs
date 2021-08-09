@@ -6,6 +6,7 @@ build = "build.rs"
 
 [profile.release]
 lto = true
+panic = 'abort'
 
 [lib]
 crate-type = ["cdylib"]
