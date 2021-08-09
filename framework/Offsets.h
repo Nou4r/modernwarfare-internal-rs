@@ -10,7 +10,7 @@ constexpr auto camera_pos = 0x1D8;
 constexpr auto local_index = 0x72718;
 constexpr auto local_index_pos = 0x1FC;
 constexpr auto recoil = 0x72C60;
-constexpr auto game_mode = 0x16F659EC;
+constexpr auto game_mode = 0x16F659E8;
 constexpr auto weapon_definitions = 0x14550FB0;
 
 namespace player {
