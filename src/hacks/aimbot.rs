@@ -13,7 +13,7 @@ use serde::{Serialize, Deserialize};
 use crate::gui::GUI;
 use std::collections::VecDeque;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct AimbotConfig {
     pub enabled: bool,
     pub aim_at_teammates: bool,

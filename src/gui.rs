@@ -9,6 +9,7 @@ use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
 use crate::sdk::Bone;
 use crate::util::{Global, keybind_select, read_memory, RenderState, try_read_memory};
+use crate::storage::{STORAGE, Storage};
 
 pub static GUI: Global<Gui> = Global::new();
 
@@ -16,11 +17,12 @@ pub struct Gui {
     open: bool,
     debug_open: bool,
     state: RenderState,
+    new_config_text: ImString,
 }
 
 impl Default for Gui {
     fn default() -> Self {
-        Self { open: true, debug_open: false, state: RenderState::new() }
+        Self { open: true, debug_open: false, state: RenderState::new(), new_config_text: ImString::new("") }
     }
 }
 
@@ -36,7 +38,15 @@ impl Gui {
             return;
         }
 
-        self.show_config_window(ui, CONFIG.get_mut());
+        let cfg = CONFIG.get_mut();
+        let storage = STORAGE.get_mut();
+        let old_cfg = cfg.clone();
+
+        self.show_config_window(ui, cfg, storage);
+
+        if storage.auto_save && cfg != &old_cfg {
+            storage.save_config(cfg.clone());
+        }
     }
 
     pub fn handle_toggle(&mut self) {
@@ -47,9 +57,9 @@ impl Gui {
         self.open
     }
 
-    fn show_config_window(&mut self, ui: &Ui, cfg: &mut Config) {
+    fn show_config_window(&mut self, ui: &Ui, cfg: &mut Config, storage: &mut Storage) {
         Window::new(&im_str!("modernwarfare-internal {}", crate::VERSION))
-            .size([290.0, 220.0], Condition::FirstUseEver)
+            .size([290.0, 240.0], Condition::FirstUseEver)
             .resizable(false)
             .collapsible(false)
             .build(ui, || {
@@ -62,6 +72,11 @@ impl Gui {
                                 .range(0.0..=1500.0)
                                 .display_format(im_str!("%.0fm"))
                                 .build(ui, &mut cfg.esp.max_distance);
+
+                            Drag::new(im_str!("Min Players"))
+                                .range(0..=155)
+                                .speed(0.2)
+                                .build(ui, &mut cfg.esp.min_players);
 
                             let color_edit_flags = ColorEditFlags::NO_INPUTS | ColorEditFlags::NO_LABEL | ColorEditFlags::ALPHA_BAR;
 
@@ -152,14 +167,33 @@ impl Gui {
                         if crate::DEBUG {
                             ui.checkbox(im_str!("Debug"), &mut self.debug_open);
                         }
-                    });
-                    TabItem::new(im_str!("Config")).build(ui, || {
-                        if ui.button(im_str!("Save")) {
-                            CONFIG.save();
-                        }
                         if ui.button(im_str!("Unload")) {
                             unsafe { crate::unload_cheat(); }
                         }
+                    });
+                    TabItem::new(im_str!("Config")).build(ui, || {
+                        ui.columns(2, im_str!("config_start"), false);
+
+                        if ui.button(im_str!("Save")) {
+                            storage.save_config(cfg.clone());
+                        }
+                        if ui.button(im_str!("Load")) {
+                            *cfg = storage.load_config();
+                        }
+                        if ui.button(im_str!("Default")) {
+                            *cfg = Config::default();
+                        }
+
+                        ui.next_column();
+
+                        if ui.checkbox(im_str!("Auto Save"), &mut storage.auto_save) {
+                            storage.save();
+                        }
+                        if ui.checkbox(im_str!("Auto Load"), &mut storage.auto_load) {
+                            storage.save();
+                        }
+
+                        ui.columns(1, im_str!("config_end"), false);
                     });
                 })
             });

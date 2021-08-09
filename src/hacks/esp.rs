@@ -12,10 +12,11 @@ use crate::sdk::{Player, Stance, units_to_m, Bone};
 use crate::util::hsv_to_rgb;
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct EspConfig {
     pub enabled: bool,
     pub max_distance: f32,
+    pub min_players: u32,
     pub show_teammates: bool,
     pub align: bool,
 
@@ -44,6 +45,7 @@ impl Default for EspConfig {
         Self {
             enabled: true,
             max_distance: 300.0,
+            min_players: 25,
             align: true,
             box_enabled: true,
             box_color: ImColor32::WHITE.into(),
@@ -72,10 +74,6 @@ pub fn render(gamedata: &Gamedata, overlay: &ImguiOverlay, config: &Config) {
     let mut players: Vec<_> = gamedata.players.iter()
         .filter(|p| !p.is_local())
         .filter(|p| config.esp.show_teammates || p.is_enemy())
-        .filter(|p| {
-            let distance = units_to_m((gamedata.local_player().origin - p.origin).length());
-            distance < config.esp.max_distance
-        })
         .collect();
 
     // Sort players so the esp appears in the right order
@@ -83,8 +81,15 @@ pub fn render(gamedata: &Gamedata, overlay: &ImguiOverlay, config: &Config) {
         (b.origin - gamedata.camera_pos).length().partial_cmp(
             &(a.origin - gamedata.camera_pos).length()).unwrap_or(Ordering::Equal));
 
+    // The number of players that were rendered
+    let mut i = 0;
     for player in players {
+        let distance = units_to_m((gamedata.local_player().origin - player.origin).length());
+        if distance > config.esp.max_distance && i > config.esp.min_players {
+            continue;
+        }
         let _ = draw_esp(overlay, player, config, gamedata);
+        i += 1;
     }
 }
 
@@ -151,7 +156,7 @@ fn draw_esp(overlay: &ImguiOverlay, player: &Player, config: &Config, gamedata: 
         overlay.draw_list().add_line(
             [(gamedata.refdef().width as f32) / 2.0, gamedata.refdef().height as _],
             [left_x + width / 2.0, bottom_y + 2.0],
-            config.esp.snapline_color
+            config.esp.snapline_color,
         ).build();
     }
 

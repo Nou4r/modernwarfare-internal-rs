@@ -27,6 +27,7 @@ use std::fmt::Debug;
 use std::panic::PanicInfo;
 use backtrace::Backtrace;
 use winapi::um::winuser::{MessageBoxA, MB_OK};
+use crate::storage::{STORAGE, Storage};
 
 #[macro_use]
 pub mod logger;
@@ -46,6 +47,7 @@ pub mod fonts;
 pub mod prediction;
 pub mod asm;
 pub mod funcs;
+pub mod storage;
 mod generated;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
@@ -56,12 +58,14 @@ pub static DEBUG: bool = true;
 pub unsafe extern "C" fn on_load() {
     logger::Logger::init(LevelFilter::Trace);
 
+    STORAGE.init_default();
+    let _ = STORAGE.get_mut().load();
     MEMORY.init_default();
     GUI.init_default();
     GAMEDATA.init_default();
     DECRYPTION.init_default();
     CHEAT.init_default();
-    config::init();
+    CONFIG.init(if STORAGE.auto_load { STORAGE.config.clone() } else { Default::default() });
     // FUNCS.init_default();
     // std::panic::set_hook(Box::new(|info| {
     //     let backtrace = Backtrace::new();
@@ -78,26 +82,21 @@ pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
 
 #[no_mangle]
 pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
-    // if let Err(e) = std::panic::catch_unwind(|| {
-        let start = Instant::now();
+    let start = Instant::now();
 
-        static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
-        let mut ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
-        ctx.io_mut().want_capture_mouse = GUI.is_open();
+    static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
+    let mut ctx = IMGUI_CONTEXT.get_or_insert_with(|| imgui::Context::from_raw(ctx));
+    ctx.io_mut().want_capture_mouse = GUI.is_open();
 
-        let ui = imgui::Ui { ctx, font_atlas: None };
+    let ui = imgui::Ui { ctx, font_atlas: None };
 
-        CHEAT.get_mut().tick();
-        ImguiOverlay::build(&ui, |overlay| {
-            CHEAT.get_mut().render(&overlay);
-        });
-        GUI.get_mut().render(&ui);
+    CHEAT.get_mut().tick();
+    ImguiOverlay::build(&ui, |overlay| {
+        CHEAT.get_mut().render(&overlay);
+    });
+    GUI.get_mut().render(&ui);
 
-        CHEAT.get_mut().last_frame_time = start.elapsed();
-    // }) {
-    //     error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
-    //      unload_cheat();
-    // }
+    CHEAT.get_mut().last_frame_time = start.elapsed();
 }
 
 #[repr(i32)]
