@@ -58,7 +58,7 @@ impl Default for EspConfig {
             distance_enabled: true,
             flags_enabled: true,
             health_bar_enabled: true,
-            show_teammates: true,
+            show_teammates: false,
         }
     }
 }

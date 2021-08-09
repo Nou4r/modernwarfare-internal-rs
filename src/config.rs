@@ -4,11 +4,23 @@ use crate::hacks::aimbot::AimbotConfig;
 use serde::{Serialize, Deserialize};
 use std::fs;
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Config {
     pub esp: EspConfig,
     pub aimbot: AimbotConfig,
     pub no_recoil_enabled: bool,
+    pub watermark: bool,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            no_recoil_enabled: true,
+            watermark: true,
+            esp: Default::default(),
+            aimbot: Default::default()
+        }
+    }
 }
 
 pub static CONFIG: Global<Config> = Global::new();
@@ -26,7 +38,7 @@ impl Config {
         // home.push("Documents");
         // home.push("config.json");
         // home.to_str().unwrap().to_string()
-        "C:/users/draven/config.json".to_string()
+        "C:/users/Ryan/config.json".to_string()
     }
 
     pub fn load() -> Option<Self> {

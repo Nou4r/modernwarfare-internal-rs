@@ -1,4 +1,3 @@
-use std::collections::VecDeque;
 use std::iter::FromIterator;
 
 use winapi::um::winuser::VK_XBUTTON1;
@@ -12,6 +11,7 @@ use crate::prediction::{Projectile, run_bullet_drop, run_prediction, Target};
 use crate::sdk::{m_to_units, Player, Stance, units_to_m, Bone, Weapon};
 use serde::{Serialize, Deserialize};
 use crate::gui::GUI;
+use std::collections::VecDeque;
 
 #[derive(Serialize, Deserialize)]
 pub struct AimbotConfig {
@@ -37,7 +37,7 @@ impl Default for AimbotConfig {
             fov: 30.0,
             speed: 2.0,
             keybind: VK_XBUTTON1,
-            aim_at_downed: false,
+            aim_at_downed: true,
             scale_speed: true,
             prediction: true,
         }
@@ -187,12 +187,14 @@ fn get_target<'a>(gamedata: &'a Gamedata, config: &AimbotConfig, ctx: &AimbotCon
         Some((player, aim_position, angle, distance))
     })
         .min_by_key(|(player, _, angle, distance)| {
-            if player.stance == Stance::Downed {
-                i32::MAX
-            } else {
-                // Combine fov and distance
-                (angle + (distance / 100.0) * angle) as i32
+            let mut val = (angle + (distance / 100.0) * angle) as i32;
+            if player.bones.get(&Bone::Head).is_none() {
+                val *= 2;
             }
+            if player.stance == Stance::Downed {
+                val *= 3;
+            }
+            val
         })
         .map(|(player, aim_position, _, _)| (player, aim_position))
 }

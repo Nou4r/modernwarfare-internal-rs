@@ -17,6 +17,7 @@ pub mod player {
     pub const STANCE: u64 = 0x960;
     pub const DEAD_1: u64 = 0xBC;
     pub const DEAD_2: u64 = 0x84C;
+    pub const WEAPON_INDEX: u64 = 0x36C;
 }
 
 pub mod bone {

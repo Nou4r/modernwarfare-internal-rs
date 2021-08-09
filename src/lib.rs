@@ -5,6 +5,11 @@
 #![feature(track_caller)]
 #![allow(clippy::missing_safety_doc)]
 
+#[macro_use]
+extern crate litcrypt;
+
+use_litcrypt!("lkasjfoiuq903281094okajfsdlkjuioj");
+
 use std::ptr::null_mut;
 use std::time::Instant;
 

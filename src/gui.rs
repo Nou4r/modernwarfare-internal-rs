@@ -14,12 +14,13 @@ pub static GUI: Global<Gui> = Global::new();
 
 pub struct Gui {
     open: bool,
+    debug_open: bool,
     state: RenderState,
 }
 
 impl Default for Gui {
     fn default() -> Self {
-        Self { open: true, state: RenderState::new() }
+        Self { open: true, debug_open: false, state: RenderState::new() }
     }
 }
 
@@ -27,7 +28,7 @@ impl Gui {
     pub unsafe fn render(&mut self, ui: &Ui) {
         let _token = ui.push_font(*FONTS.get().get(&crate::fonts::Font::Verdana).unwrap());
 
-        if crate::DEBUG {
+        if crate::DEBUG && self.debug_open {
             self.show_deubg_window(ui);
         }
 
@@ -97,15 +98,21 @@ impl Gui {
                             ui.checkbox(im_str!("Distance"), &mut cfg.esp.distance_enabled);
                             ui.checkbox(im_str!("Flags"), &mut cfg.esp.flags_enabled);
 
-                            ui.columns(1, im_str!("end_columns"), false);
+                            ui.columns(1, im_str!("end_esp_columns"), false);
                         }
                     });
                     TabItem::new(im_str!("Aimbot"))
                         .build(ui, || {
+                            ui.columns(2, im_str!("esp_columns"), false);
                             ui.checkbox(im_str!("Enabled"), &mut cfg.aimbot.enabled);
+                            if !cfg.aimbot.enabled { ui.columns(1, im_str!("end_esp_columns"), false); }
 
                             if cfg.aimbot.enabled {
                                 ui.checkbox(im_str!("Aim at Teammates"), &mut cfg.aimbot.aim_at_teammates);
+
+                                ui.next_column();
+                                ui.checkbox(im_str!("Aim at downed"), &mut cfg.aimbot.aim_at_downed);
+                                ui.columns(1, im_str!("end_esp_columns"), false);
 
                                 keybind_select(ui, &mut self.state, im_str!("Aimbot Key"), &mut cfg.aimbot.keybind);
 
@@ -135,12 +142,16 @@ impl Gui {
                                     .display_format(im_str!("%.0fm"))
                                     .build(ui, &mut cfg.aimbot.max_distance);
                                 if cfg.aimbot.max_distance > cfg.esp.max_distance {
-                                    cfg.esp.max_distance = cfg.aimbot.max_distance;
+                                    cfg.aimbot.max_distance = cfg.esp.max_distance;
                                 }
                             }
                         });
                     TabItem::new(im_str!("Misc")).build(ui, || {
                         ui.checkbox(im_str!("No Recoil"), &mut cfg.no_recoil_enabled);
+                        ui.checkbox(im_str!("Watermark"), &mut cfg.watermark);
+                        if crate::DEBUG {
+                            ui.checkbox(im_str!("Debug"), &mut self.debug_open);
+                        }
                     });
                     TabItem::new(im_str!("Config")).build(ui, || {
                         if ui.button(im_str!("Save")) {
@@ -213,6 +224,7 @@ impl Gui {
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
                     debug!(GAMEDATA.get().local_player().origin);
+                    debug!(GAMEDATA.local_player().weapon_index);
                     debug!(sdk::Weapon::from_index(GAMEDATA.local_player().weapon_index));
                 }
             });

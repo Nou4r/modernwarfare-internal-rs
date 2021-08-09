@@ -21,6 +21,7 @@ namespace player {
     constexpr auto stance = 0x960;
     constexpr auto dead_1 = 0xBC;
     constexpr auto dead_2 = 0x84C;
+    constexpr auto weapon_index = 0x36C;
 }
 
 namespace bone {

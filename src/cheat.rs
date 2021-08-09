@@ -9,7 +9,7 @@ use crate::decryption::DECRYPTION;
 use crate::fonts::Font;
 use crate::gamedata::{GAMEDATA, Gamedata};
 use crate::{hacks, InputType, unload_cheat};
-use crate::overlay::{ImguiOverlay, TextOptions};
+use crate::overlay::{ImguiOverlay, TextOptions, TextStyle};
 use crate::sdk;
 use crate::util::Global;
 use crate::hacks::aimbot::AimbotContext;
@@ -46,6 +46,9 @@ impl Cheat {
     }
 
     pub unsafe fn render(&self, overlay: &ImguiOverlay) {
+        if CONFIG.watermark {
+            overlay.draw_text([5.0, 5.0], crate::VERSION, TextOptions::default().font(Font::Verdana).style(TextStyle::Shadow));
+        }
         if GAMEDATA.valid {
             hacks::esp::render(&GAMEDATA, overlay, &CONFIG);
         }
