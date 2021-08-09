@@ -5,7 +5,6 @@ use crate::cheat::CHEAT;
 use crate::config::{Config, CONFIG};
 use crate::decryption::DECRYPTION;
 use crate::fonts::FONTS;
-use crate::funcs::FUNCS;
 use crate::gamedata::GAMEDATA;
 use crate::memory::MEMORY;
 use crate::sdk::Bone;
@@ -205,10 +204,15 @@ impl Gui {
                     // debug!(sdk::get_bone_matrix(sdk::local_index()));
                 }
 
+                debug!(read_memory::<u32>(MEMORY.image_base + offsets::GAME_MODE));
+                debug!(read_memory::<u32>(MEMORY.image_base + offsets::GAME_MODE + 4));
+                debug!(read_memory::<u32>(MEMORY.image_base + offsets::GAME_MODE + 8));
+
                 debug!(CHEAT.keys_down);
                 debug!(CHEAT.gamedata_history.len());
                 if GAMEDATA.valid {
                     debug!(GAMEDATA.players.len());
+                    debug!(GAMEDATA.get().local_player().origin);
                     debug!(sdk::Weapon::from_index(GAMEDATA.local_player().weapon_index));
                 }
             });

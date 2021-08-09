@@ -29,7 +29,10 @@ impl Weapon {
         let name = "";
 
         let velocity_info: u64 = read_memory(weapon_defs + 0x8);
-        let velocity = read_memory(velocity_info + 0xDC);
+        let velocity: f32 = read_memory(velocity_info + 0xDC);
+        if velocity == 0.0 {
+            return None;
+        }
 
         Some(Self { internal_name, name_2, name, velocity, index })
     }

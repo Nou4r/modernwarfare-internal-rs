@@ -16,7 +16,7 @@
 #include "Util.h"
 #include "xorstr.h"
 
-__declspec(dllexport) HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterval, UINT flags)
+HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, UINT syncInterval, UINT flags)
 {
     if (pSwapChain == nullptr) {
         return hooks->originalPresent(pSwapChain, syncInterval, flags);
@@ -34,13 +34,12 @@ __declspec(dllexport) HRESULT __fastcall hkPresent(IDXGISwapChain3* pSwapChain, 
     graphics::newFrame();
 
     interop::on_frame(ImGui::GetCurrentContext());
-    ImGui::ShowDemoWindow();
 
     const auto result = graphics::render(pSwapChain, syncInterval, flags);
     return result;
 }
 
-__declspec(dllexport) LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ImGuiIO& io = ImGui::GetIO();
     switch (uMsg) {
@@ -132,6 +131,7 @@ Hooks::Hooks()
 {
     this->gameWindow = getProcessWindow();
     hookPresent();
+    //hookDiscord();
 }
 
 void Hooks::hookWndProc()

@@ -15,13 +15,19 @@ pub fn is_bad_ptr(ptr: u64) -> bool {
     unsafe { isBadPtr(ptr) }
 }
 
+#[track_caller]
 pub unsafe fn read_memory<T>(ptr: u64) -> T {
-    try_read_memory(ptr).unwrap_or_else(|| mem::zeroed())
+    if is_bad_ptr(ptr) {
+        error!("Attempted to read invalid memory at 0x{:X} ({})", ptr, std::panic::Location::caller());
+        return std::mem::zeroed();
+    }
+    ptr::read(ptr as _)
 }
 
+#[track_caller]
 pub unsafe fn try_read_memory<T>(ptr: u64) -> Option<T> {
     if is_bad_ptr(ptr) {
-        error!("Attempted to read invalid memory at 0x{:X}\n{:?}", ptr, backtrace::Backtrace::new());
+        error!("Attempted to read invalid memory at 0x{:X} ({})", ptr, std::panic::Location::caller());
         return None;
     }
     Some(ptr::read(ptr as _))

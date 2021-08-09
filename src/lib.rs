@@ -2,6 +2,7 @@
 #![feature(destructuring_assignment)]
 #![feature(type_name_of_val)]
 #![feature(asm)]
+#![feature(track_caller)]
 #![allow(clippy::missing_safety_doc)]
 
 use std::ptr::null_mut;
@@ -20,14 +21,15 @@ use crate::overlay::ImguiOverlay;
 use std::fmt::Debug;
 use std::panic::PanicInfo;
 use backtrace::Backtrace;
-use crate::funcs::FUNCS;
+use winapi::um::winuser::{MessageBoxA, MB_OK};
 
+#[macro_use]
+pub mod logger;
 pub mod cheat;
 pub mod gui;
 pub mod util;
 pub mod memory;
 pub mod decryption;
-pub mod logger;
 pub mod offsets;
 pub mod sdk;
 pub mod math;
@@ -39,6 +41,7 @@ pub mod fonts;
 pub mod prediction;
 pub mod asm;
 pub mod funcs;
+mod generated;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
 // pub static DEBUG: bool = cfg!(debug_assertations);
@@ -54,11 +57,11 @@ pub unsafe extern "C" fn on_load() {
     DECRYPTION.init_default();
     CHEAT.init_default();
     config::init();
-    FUNCS.init_default();
-    std::panic::set_hook(Box::new(|info| {
-        let backtrace = Backtrace::new();
-        error!("panic: {:?}\n{:?}", info, backtrace);
-    }))
+    // FUNCS.init_default();
+    // std::panic::set_hook(Box::new(|info| {
+    //     let backtrace = Backtrace::new();
+    //     error!("panic: {:?}\n{:?}", info, backtrace);
+    // }))
 }
 
 #[no_mangle]
@@ -70,7 +73,7 @@ pub unsafe extern "C" fn on_imgui_init(ctx: *mut imgui::sys::ImGuiContext) {
 
 #[no_mangle]
 pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
-    if let Err(e) = std::panic::catch_unwind(|| {
+    // if let Err(e) = std::panic::catch_unwind(|| {
         let start = Instant::now();
 
         static mut IMGUI_CONTEXT: Option<imgui::Context> = None;
@@ -86,10 +89,10 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
         GUI.get_mut().render(&ui);
 
         CHEAT.get_mut().last_frame_time = start.elapsed();
-    }) {
-        // error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
-        unload_cheat();
-    }
+    // }) {
+    //     error!("Panic during frame: {:?} | {:?}\n{:?}", e.downcast_ref::<String>(), e.downcast_ref::<&str>(), backtrace::Backtrace::new());
+    //      unload_cheat();
+    // }
 }
 
 #[repr(i32)]

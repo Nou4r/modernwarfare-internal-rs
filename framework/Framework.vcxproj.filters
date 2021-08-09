@@ -81,6 +81,9 @@
     <ClInclude Include="..\imgui\cimgui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Decryption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dllmain.cpp">
@@ -123,6 +126,9 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Interop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Decryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -62,7 +62,7 @@ impl Gamedata {
         self.local_index = sdk::local_index();
 
         if !self.players.iter().any(|p| p.id == self.local_index) {
-            log::warn!("Could not find local player while updating gameinfo");
+            log::warn!("Could not find local player while updating gameinfo ({:?})", self.players.iter().map(|p| p.id).collect::<Vec<_>>());
             return;
         }
 

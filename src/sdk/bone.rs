@@ -79,7 +79,6 @@ pub unsafe fn get_bone_matrix(index: u32) -> Option<HashMap<Bone, Vector3>> {
         bone_ptr
     };
     if bone_ptr == 0 {
-        // log::trace!("bone_ptr was 0");
         return None;
     }
 

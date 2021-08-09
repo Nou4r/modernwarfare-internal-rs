@@ -46,6 +46,11 @@ pub unsafe fn gamemode() -> u32 {
     read_memory(MEMORY.image_base + offsets::GAME_MODE)
 }
 
+pub unsafe fn max_players() -> u32 {
+    return 155;
+    // read_memory(MEMORY.image_base + offsets::GAME_MODE + 4)
+}
+
 pub unsafe fn get_name_struct(player_index: u32) -> Option<&'static NameInfo> {
     let base: u64 = try_read_memory(MEMORY.image_base + offsets::NAME_ARRAY)?;
     Some(transmute(base + offsets::NAME_ARRAY_POS + (player_index * 0xD0) as u64))
@@ -72,7 +77,7 @@ pub unsafe fn get_players(players: &mut Vec<Player>) {
 
     let client_base = DECRYPTION.client_base.unwrap();
     players.clear();
-    for i in 0..gamemode() {
+    for i in 0..max_players() {
         let base = client_base + (i as u64 * offsets::player::SIZE);
         let player = Player::new(base, i as _);
         if let Some(player) = player {

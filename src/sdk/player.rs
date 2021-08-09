@@ -65,7 +65,8 @@ impl Player {
         let battle_tag = str_from_ptr(name_struct.battle_tag.as_ptr()).unwrap_or_default();
         let health = name_struct.health;
 
-        let weapon_index = read_memory(base_address + player::WEAPON_INDEX);
+        // let weapon_index = read_memory(base_address + player::WEAPON_INDEX);
+        let weapon_index = 0;
         // let weapon = Weapon::from_index(weapon_index).unwrap_or_else(|| {
         //     error!("Could not get Weapon index {} for player {}", weapon_index, name);
         //     Weapon::from_index(0).unwrap()
