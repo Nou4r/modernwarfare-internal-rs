@@ -183,6 +183,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>$(ExternalCompilerOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -202,6 +203,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>$(ExternalCompilerOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -223,6 +225,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>$(ExternalCompilerOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -252,6 +255,7 @@
     <ClInclude Include="lazy_importer.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Offsets.h" />
+    <ClInclude Include="Style.h" />
     <ClInclude Include="Syscall.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="xorstr.h" />
@@ -271,6 +275,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="Interop.cpp" />
+    <ClCompile Include="Style.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>

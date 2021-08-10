@@ -13,8 +13,15 @@ fn parse_offsets(header: &str) -> String {
 }
 
 fn main() {
-    Command::new("C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/MSBuild.exe")
-        .args(&["framework/Framework.sln", "/property:Configuration=RustLib", "/property:Platform=x64"])
+    let args = ["framework/Framework.sln", "/property:Configuration=RustLib", "/property:Platform=x64"];
+
+    let mut cmd = Command::new("C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/MSBuild.exe");
+
+    #[cfg(feature = "klar")]
+    cmd.env("ExternalCompilerOptions", "/DKLAR");
+
+    cmd
+        .args(&args)
         .status()
         .unwrap()
         .exit_ok()

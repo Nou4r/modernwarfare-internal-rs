@@ -47,7 +47,7 @@ impl Cheat {
 
     pub unsafe fn render(&self, overlay: &ImguiOverlay) {
         if CONFIG.watermark {
-            overlay.draw_text([5.0, 5.0], crate::VERSION, TextOptions::default().font(Font::Verdana).style(TextStyle::Shadow));
+            overlay.draw_text([5.0, 5.0], &format!("{} {}", crate::NAME, crate::VERSION), TextOptions::default().font(Font::Verdana).style(TextStyle::Shadow));
         }
         if GAMEDATA.valid {
             hacks::esp::render(&GAMEDATA, overlay, &CONFIG);

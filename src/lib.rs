@@ -51,8 +51,13 @@ pub mod storage;
 mod generated;
 
 pub static VERSION: &str = concat!(env!("GIT_BRANCH"), "/", env!("GIT_HASH"), env!("GIT_MODIFIED_STR"));
+#[cfg(feature = "klar")]
+pub static NAME: &str = "klar.gg";
+#[cfg(not(feature = "klar"))]
+pub static NAME: &str = "modernwarfare-internal";
+
 // pub static DEBUG: bool = cfg!(debug_assertations);
-pub static DEBUG: bool = true;
+pub static DEBUG: bool = cfg!(feature = "debug");
 
 #[no_mangle]
 pub unsafe extern "C" fn on_load() {
@@ -92,7 +97,7 @@ pub unsafe extern "C" fn on_frame(ctx: *mut imgui::sys::ImGuiContext) {
 
     CHEAT.get_mut().tick();
     ImguiOverlay::build(&ui, |overlay| {
-        CHEAT.get_mut().render(&overlay);
+        CHEAT.get_mut().render(overlay);
     });
     GUI.get_mut().render(&ui);
 

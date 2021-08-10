@@ -58,7 +58,7 @@ impl Gui {
     }
 
     fn show_config_window(&mut self, ui: &Ui, cfg: &mut Config, storage: &mut Storage) {
-        Window::new(&im_str!("modernwarfare-internal {}", crate::VERSION))
+        Window::new(&im_str!("{} {}", crate::NAME, crate::VERSION))
             .size([290.0, 240.0], Condition::FirstUseEver)
             .resizable(false)
             .collapsible(false)
