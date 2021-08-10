@@ -92,7 +92,39 @@ static std::string getVersion()
 
 inline HCURSOR __stdcall Syscall_SetCursor(HCURSOR hCursor)
 {
-	return runSyscall<HCURSOR>(0x101A, hCursor);
+
+	static auto version = getVersion();
+	int id = 4122;
+
+	/*
+      "1507": 4125,
+      "1511": 4125,
+      "1607": 4125,
+      "1703": 4125,
+      "1709": 4125,
+      "1803": 4125,
+      "1809": 4125,
+      "1903": 4125,
+      "1909": 4125,
+      "2004": 4122,
+      "20H2": 4122,
+      "21H2": 4120,
+	 */
+
+	  if (version == "1507"){ id = 4125; }
+      else if(version == "1511"){ id = 4125; }
+      else if(version == "1607"){ id = 4125; }
+      else if(version == "1703"){ id = 4125; }
+      else if(version == "1709"){ id = 4125; }
+      else if(version == "1803"){ id = 4125; }
+      else if(version == "1809"){ id = 4125; }
+      else if(version == "1903"){ id = 4125; }
+      else if(version == "1909"){ id = 4125; }
+      else if(version == "2004"){ id = 4122; }
+      else if(version == "20H2"){ id = 4122; }
+      else if(version == "21H2"){ id = 4120; }
+
+	return runSyscall<HCURSOR>(id, hCursor);
 	//return runSyscall<HCURSOR>(0x1018, hCursor);
 	/*
 	static FARPROC pNtUserSetCursor;
@@ -104,7 +136,39 @@ inline HCURSOR __stdcall Syscall_SetCursor(HCURSOR hCursor)
 
 inline BOOL __stdcall Syscall_GetCursorPos(LPPOINT lpPoint)
 {
-	return runSyscall<BOOL>(0x102a, lpPoint, 1, 127);
+	//NtUserCallTwoParam
+	static auto version = getVersion();
+	int id = 4138;
+
+	/*
+      "1507": 4141,
+      "1511": 4141,
+      "1607": 4141,
+      "1703": 4141,
+      "1709": 4141,
+      "1803": 4141,
+      "1809": 4141,
+      "1903": 4141,
+      "1909": 4141,
+      "2004": 4138,
+      "20H2": 4138,
+	  "21H2": 5149,
+	  */
+	if (version == "1507") { id = 4141; }
+      else if(version == "1511") { id = 4141; }
+	  else if(version == "1607") { id = 4141; }
+      else if(version == "1703") { id = 4141; }
+      else if(version == "1709") { id = 4141; }
+      else if(version == "1803") { id = 4141; }
+      else if(version == "1809") { id = 4141; }
+      else if(version == "1903") { id = 4141; }
+      else if(version == "1909") { id = 4141; }
+      else if(version == "2004") { id = 4138; }
+      else if(version == "20H2") { id = 4138; }
+	  else if(version == "21H2") { id = 5149; }
+
+
+	return runSyscall<BOOL>(id, lpPoint, 1, 127);
 	// win11
 	//return runSyscall<BOOL>(0x141D, lpPoint, 1, 127);
 	/*
@@ -159,7 +223,6 @@ inline ULONG __stdcall Syscall_SendInput(INPUT input)
     } else if (version == "20H2") {
         id = 4223;
     }
-	//DEBUG_INFO("{}, {}", input.mi.dx, input.mi.dy);
 
     return runSyscall<ULONG>(id, 1, &input, sizeof(INPUT));
 }
