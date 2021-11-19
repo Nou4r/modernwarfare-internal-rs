@@ -152,6 +152,11 @@ impl Gui {
                                     .display_format(im_str!("%.1f"))
                                     .build(ui, &mut cfg.aimbot.speed);
 
+                                Slider::new(im_str!("Curve Scale"))
+                                    .range(0.0..=5.0)
+                                    .display_format(im_str!("%.1f"))
+                                    .build(ui, &mut cfg.aimbot.curve_scale);
+
                                 Slider::new(im_str!("Max Distance"))
                                     .range(0.0..=1500.0)
                                     .display_format(im_str!("%.0fm"))

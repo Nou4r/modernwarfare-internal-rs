@@ -45,7 +45,6 @@ pub mod hacks;
 pub mod config;
 pub mod fonts;
 pub mod prediction;
-pub mod asm;
 pub mod funcs;
 pub mod storage;
 mod generated;

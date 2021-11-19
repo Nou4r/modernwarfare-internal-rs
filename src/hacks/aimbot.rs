@@ -21,6 +21,7 @@ pub struct AimbotConfig {
     pub bone: Bone,
     pub fov: f32,
     pub speed: f32,
+    pub curve_scale: f32,
     pub keybind: i32,
     pub aim_at_downed: bool,
     pub scale_speed: bool,
@@ -36,6 +37,7 @@ impl Default for AimbotConfig {
             max_distance: 400.0,
             fov: 30.0,
             speed: 2.0,
+            curve_scale: 1.0,
             keybind: VK_XBUTTON1,
             aim_at_downed: true,
             scale_speed: true,
@@ -72,7 +74,7 @@ pub fn tick(gamedata: &Gamedata, config: &Config, ctx: &mut AimbotContext) {
     aim_at(gamedata, target_pos, &config.aimbot, ctx);
 }
 
-fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut AimbotContext) {
+fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig, ctx: &mut AimbotContext) {
     let absolute_delta = math::calculate_relative_angles(&gamedata.camera_pos, &target, &gamedata.camera_angles);
 
     // info!("Aiming at {}\t({}m)\t({}°)\t({})\t({:?})",
@@ -89,12 +91,15 @@ fn aim_at(gamedata: &Gamedata, target: Vector3, config: &AimbotConfig,ctx: &mut 
     let speed_multiplier = config.speed;
     let scale = 1.0 / 2.5;
 
-    let multiplier = fov_multiplier * tickrate_multiplier * speed_multiplier;
+    let multiplier = fov_multiplier * tickrate_multiplier * speed_multiplier * (4.0_f32.powf(config.curve_scale)/4.0);
 
     let scaled_delta = absolute_delta * (multiplier * scale);
 
-    let dx_f = -scaled_delta.yaw;
-    let dy_f = scaled_delta.pitch;
+    let mut dx_f = -scaled_delta.yaw;
+    let mut dy_f = scaled_delta.pitch;
+
+    dx_f = dx_f.abs().powf(1.0 / config.curve_scale) * (dx_f / dx_f.abs());
+    dy_f = dy_f.abs().powf(1.0 / config.curve_scale) * (dy_f / dy_f.abs());
 
     ctx.mouse_accum.0 += dx_f;
     ctx.mouse_accum.1 += dy_f;
@@ -128,10 +133,10 @@ fn get_aim_position(player: &Player, gamedata: &Gamedata, config: &AimbotConfig,
         .collect::<VecDeque<_>>();
     let target = Target::from_location_history(&player.origin, &player_history);
 
-    let projectile = Projectile{
+    let projectile = Projectile {
         velocity: m_to_units(unsafe { Weapon::from_index(gamedata.local_player().weapon_index) }.map(|n| n.velocity).unwrap_or(800.0)),
         gravity: m_to_units(9.8),
-        source_pos: gamedata.camera_pos
+        source_pos: gamedata.camera_pos,
     };
     // let projectile = Projectile { velocity: 4000.0, gravity: m_to_units(9.8), source_pos: gamedata.camera_pos };
 
@@ -168,7 +173,7 @@ fn get_target<'a>(gamedata: &'a Gamedata, config: &AimbotConfig, ctx: &AimbotCon
 
         // Check distance
         let distance = units_to_m((player.origin - local.origin).length());
-        if distance > config.max_distance {
+        if distance > config.max_distance || player.bones.len() > 10 {
             return None;
         }
 

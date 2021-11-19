@@ -80,16 +80,22 @@ pub fn render(gamedata: &Gamedata, overlay: &ImguiOverlay, config: &Config) {
     players.sort_by(|a, b|
         (b.origin - gamedata.camera_pos).length().partial_cmp(
             &(a.origin - gamedata.camera_pos).length()).unwrap_or(Ordering::Equal));
+    players.reverse();
 
-    // The number of players that were rendered
+    let mut new_players = Vec::new();
     let mut i = 0;
     for player in players {
         let distance = units_to_m((gamedata.local_player().origin - player.origin).length());
         if distance > config.esp.max_distance && i > config.esp.min_players {
-            continue;
+            break;
         }
-        let _ = draw_esp(overlay, player, config, gamedata);
+        new_players.push(player);
         i += 1;
+    }
+    new_players.reverse();
+    // The number of players that were rendered
+    for player in new_players {
+        let _ = draw_esp(overlay, player, config, gamedata);
     }
 }
 
